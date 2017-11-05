@@ -11,12 +11,5 @@ const userSchema = new Schema({
   travel_entry: [{ type: Schema.Types.ObjectId, ref: 'TravelEntry' }],
   date_added: { type: 'Date', default: Date.now, required: true },
 });
-// User
-
-// Experience
-
-// TravelEntry
-
-
 
 export default mongoose.model('User', userSchema);
