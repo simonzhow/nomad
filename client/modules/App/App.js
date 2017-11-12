@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 // import Header from './components/Header/Header';
 // import Footer from './components/Footer/Footer';
 // import Landing from '../../components/Landing';
-import Leaderboard from '../../pages/Leaderboard';
 
 // Import Actions
 import { toggleAddPost } from './AppActions';
@@ -61,7 +60,7 @@ export class App extends Component {
           </div>
           <Footer />
         </div>*/}
-        <Leaderboard />
+        {this.props.children}
       </div>
     );
   }
