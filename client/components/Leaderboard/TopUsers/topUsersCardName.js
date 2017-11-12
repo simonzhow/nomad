@@ -3,7 +3,8 @@ import styles from 'styled-components';
 
 const TopUsersCardNameDiv = styles.div`
   text-align: center;
-  font-size: 20px;
+  font-size: 12px;
+  margin-bottom: 15px;
 `;
 
 export default function TopUsersCardName(props) {

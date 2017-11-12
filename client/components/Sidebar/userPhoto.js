@@ -8,7 +8,7 @@ const UserPhotoDiv = styled.div`
 `;
 
 const UserPhotoImg = styled.img`
-  display: block;
+  display: flex;
   margin: auto;
   margin-bottom: 15px;
   border-radius: 20px;
