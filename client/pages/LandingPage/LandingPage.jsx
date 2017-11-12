@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import styles from './Landing.css';
+import styles from './LandingPage.css';
 import logo from '../../static/img/nomad_logo.png';
 
 let silhouette = [
@@ -16,7 +16,7 @@ let silhouette = [
 	require('../../static/img/silhouette9.jpg'),
 ];
 
-export class Landing extends Component {
+export class LandingPage extends Component {
 
 	constructor(props) {
 		super(props);
@@ -57,4 +57,4 @@ export class Landing extends Component {
 	}
 }
 
-export default Landing;
+export default LandingPage;

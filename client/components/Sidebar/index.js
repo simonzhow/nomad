@@ -5,6 +5,8 @@ import UserPhoto from './userPhoto';
 import UserName from './userName';
 import Navigation from './navigation';
 
+import sidebarimage from '../../static/img/sidebar.png';
+
 const SidebarDiv = styled.div`
   position: fixed;
   top: 0;
@@ -16,6 +18,7 @@ const SidebarDiv = styled.div`
   height: auto;
   min-height: 100%;
   transition: left 0.125s ease-in-out;
+  background-image: url(${sidebarimage});
 `;
 
 const SidebarContainer = styled.div`

@@ -8,14 +8,19 @@ const NavigationDiv = styled.div`
 `;
 
 const NavigationButton = styled.button`
-  width: 200px;
-  height: 40px;
-  margin-bottom: 15px;
+  width: 220px;
+  height: 60px;
+  margin-bottom: 25px;
   border-radius: 30px;
+  border-color: transparent;
   color: #66D6AE;
   background-color: white;
   font-size: 15px;
   cursor: pointer;
+
+  &:focus {
+    outline: 0;
+  }
 
   &:hover {
     background-color: #66D6AE;

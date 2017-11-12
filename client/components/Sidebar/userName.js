@@ -9,6 +9,7 @@ const UserNameDiv = styled.div`
 
 const Name = styled.h3`
   font-size: 30px;
+  color: white;
 `;
 
 export default function UserName() {

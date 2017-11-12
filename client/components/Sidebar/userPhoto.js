@@ -14,7 +14,6 @@ const UserPhotoImg = styled.img`
   border-radius: 20px;
   background-color: white;
   background-size: 120px;
-  border: 5px solid white;
   height: 200px;
   width: 200px;
 `;

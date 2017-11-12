@@ -2,8 +2,8 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import App from './modules/App/App';
-import Landing from './pages/Landing';
-import Leaderboard from './pages/Leaderboard';
+import LandingPage from './pages/LandingPage';
+import LeaderboardPage from './pages/LeaderboardPage';
 
 // require.ensure polyfill for node
 if (typeof require.ensure !== 'function') {
@@ -26,7 +26,7 @@ if (process.env.NODE_ENV !== 'production') {
 // More info: http://blog.mxstbr.com/2016/01/react-apps-with-pages/
 export default (
   <Route path="/" component={App}>
-    <IndexRoute component={Landing} />
-    <Route path="/leaderboard" component={Leaderboard} />
+    <IndexRoute component={LandingPage} />
+    <Route path="/leaderboard" component={LeaderboardPage} />
   </Route>
 );
