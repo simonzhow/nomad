@@ -33,6 +33,7 @@
   "dependencies": {
     "babel-core": "^6.9.1",
     "body-parser": "^1.15.1",
+    "cloudinary": "^1.9.1",
     "compression": "^1.6.2",
     "cors": "^2.8.4",
     "cross-env": "^1.0.8",
