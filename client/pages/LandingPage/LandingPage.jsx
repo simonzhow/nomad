@@ -36,7 +36,7 @@ export class LandingPage extends Component {
 
   getBackgroundStyle(offset) {
     return {
-      backgroundImage: `url${silhouette[offset + this.state.imgcount]}`,
+      backgroundImage: `url(${silhouette[offset + this.state.imgcount]})`,
       backgroundSize: 'cover',
     }
   }
