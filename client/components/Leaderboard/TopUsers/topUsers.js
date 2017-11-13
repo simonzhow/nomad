@@ -1,13 +1,14 @@
-import React from 'react';
-import styles from 'styled-components';
+import React from 'react'
+import PropTypes from 'prop-types'
+import styles from 'styled-components'
 
-import TopUsersCard from './topUsersCard';
+import TopUsersCard from './topUsersCard'
 
 const TopUsersDiv = styles.div`
   justify-content: center;
   display: flex;
   flex-direction: row;
-`;
+`
 
 export default function TopUsers(props) {
   return (
@@ -24,5 +25,9 @@ export default function TopUsers(props) {
         ))
       }
     </TopUsersDiv>
-  );
+  )
+}
+
+TopUsers.propTypes = {
+  leaders: PropTypes.array,
 }

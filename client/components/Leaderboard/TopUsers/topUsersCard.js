@@ -1,8 +1,9 @@
-import React from 'react';
-import styles from 'styled-components';
+import React from 'react'
+import PropTypes from 'prop-types'
+import styles from 'styled-components'
 
-import TopUsersCardName from './topUsersCardName';
-import TopUsersCardInfo from './topUsersCardInfo';
+import TopUsersCardName from './topUsersCardName'
+import TopUsersCardInfo from './topUsersCardInfo'
 
 const TopUsersCardDiv = styles.div`
   border-radius: 2px;
@@ -17,7 +18,7 @@ const TopUsersCardDiv = styles.div`
 
   &:hover {
     transform: scale(1.05);
-`;
+`
 
 export default function TopUsersCard(props) {
   return (
@@ -25,5 +26,10 @@ export default function TopUsersCard(props) {
       <TopUsersCardInfo position={props.position} />
       <TopUsersCardName name={props.name} />
     </TopUsersCardDiv>
-  );
+  )
+}
+
+TopUsersCard.propTypes = {
+  name: PropTypes.string,
+  position: PropTypes.string,
 }

@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
 
 const userSchema = new Schema({
   first_name: { type: 'String', required: true },
@@ -10,6 +10,6 @@ const userSchema = new Schema({
   points: { type: 'int', required: true },
   travel_entry: [{ type: Schema.Types.ObjectId, ref: 'TravelEntry' }],
   date_added: { type: 'Date', default: Date.now, required: true },
-});
+})
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema)

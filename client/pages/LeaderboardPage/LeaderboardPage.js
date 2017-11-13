@@ -1,18 +1,18 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
-import Sidebar from '../../components/Sidebar';
-import Leaderboard from '../../components/Leaderboard';
-import staffMembers from '../../static/MembersData';
+import Sidebar from '../../components/Sidebar'
+import Leaderboard from '../../components/Leaderboard'
+import staffMembers from '../../static/MembersData'
 
 const LeaderboardPageDiv = styled.div`
 
-`;
+`
 
 export default function LeaderboardPage() {
   const sortMembersByScore = (a, b) => {
-    return b.score - a.score;
-  };
+    return b.score - a.score
+  }
 
   return (
     <LeaderboardPageDiv>
@@ -21,5 +21,5 @@ export default function LeaderboardPage() {
         members={staffMembers.members.sort(sortMembersByScore)}
       />
     </LeaderboardPageDiv>
-  );
+  )
 }
