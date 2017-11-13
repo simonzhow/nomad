@@ -1,4 +1,4 @@
-import DashboardPage from './DashboardPage';
+import DashboardPage from './DashboardPage'
 
 export default {
   dashboard: {
@@ -6,4 +6,4 @@ export default {
     exact: true,
     component: DashboardPage,
   },
-};
+}

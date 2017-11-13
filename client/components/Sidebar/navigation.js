@@ -1,11 +1,11 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 // import { NavLink } from 'react-router-dom';
 
 const NavigationDiv = styled.div`
   text-align: center;
   margin-top: 50px;
-`;
+`
 
 const NavigationButton = styled.button`
   width: 220px;
@@ -27,7 +27,7 @@ const NavigationButton = styled.button`
     color: white;
   }
 
-`;
+`
 
 export default function Navigation() {
   return (
@@ -38,5 +38,5 @@ export default function Navigation() {
       <NavigationButton>My Friends</NavigationButton>
     </NavigationDiv>
 
-  );
+  )
 }

@@ -1,11 +1,11 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
-import UserPhoto from './userPhoto';
-import UserName from './userName';
-import Navigation from './navigation';
+import UserPhoto from './userPhoto'
+import UserName from './userName'
+import Navigation from './navigation'
 
-import sidebarimage from '../../static/img/sidebar.png';
+import sidebarimage from '../../static/img/sidebar.png'
 
 const SidebarDiv = styled.div`
   position: fixed;
@@ -19,11 +19,11 @@ const SidebarDiv = styled.div`
   min-height: 100%;
   transition: left 0.125s ease-in-out;
   background-image: url(${sidebarimage});
-`;
+`
 
 const SidebarContainer = styled.div`
   min-height: 680px;
-`;
+`
 
 
 export default function Sidebar() {
@@ -36,5 +36,5 @@ export default function Sidebar() {
       </SidebarContainer>
     </SidebarDiv>
 
-  );
+  )
 }

@@ -31,6 +31,6 @@ const staffMembers = {
       facebook: 'https://www.facebook.com/anshul.aggarwal.14',
     },
   ],
-};
+}
 
-export default staffMembers;
+export default staffMembers
