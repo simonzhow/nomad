@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import Sidebar from '../../components/Sidebar'
 import Leaderboard from '../../components/Leaderboard'
-import staffMembers from '../../static/MembersData'
+import users from '../../static/MembersData'
 
 const LeaderboardPageDiv = styled.div`
 
@@ -18,7 +18,7 @@ export default function LeaderboardPage() {
     <LeaderboardPageDiv>
       <Sidebar />
       <Leaderboard
-        members={staffMembers.members.sort(sortMembersByScore)}
+        members={users.members.sort(sortMembersByScore)}
       />
     </LeaderboardPageDiv>
   )
