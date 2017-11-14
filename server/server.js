@@ -37,6 +37,9 @@ import posts from './routes/post.routes'
 import dummyData from './dummyData'
 import serverConfig from './config'
 
+// Set CLIENT in server to false
+global.CLIENT = false
+
 // Set native promises as mongoose promise
 mongoose.Promise = global.Promise
 
