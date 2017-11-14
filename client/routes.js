@@ -4,7 +4,7 @@ import { Route, IndexRoute } from 'react-router'
 import App from './modules/App/App'
 import LandingPage from './pages/LandingPage'
 import LeaderboardPage from './pages/LeaderboardPage'
-import Map from './components/Map'
+import MapPage from './pages/MapPage'
 
 // require.ensure polyfill for node
 if (typeof require.ensure !== 'function') {
@@ -29,6 +29,6 @@ export default (
   <Route path='/' component={App}>
     <IndexRoute component={LandingPage} />
     <Route path='/leaderboard' component={LeaderboardPage} />
-    <Route path='/map' component={Map} />
+    <Route path='/map' component={MapPage} />
   </Route>
 )
