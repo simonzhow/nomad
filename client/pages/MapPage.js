@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import Sidebar from '../../components/Sidebar'
-import Map from '../../components/Map'
+import Sidebar from '../components/Sidebar'
+import Map from '../components/Map'
 
 const MapPageWrapper = styled.div`
   height: 100vh;
