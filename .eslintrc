@@ -27,6 +27,7 @@
      "import/no-unresolved": [0], // Until import plugin supports webpack 2 resolveModules
      "global-require": [0],
      "quotes": ["error", "single"],
-     "jsx-quotes": ["error", "prefer-single"]
+     "jsx-quotes": ["error", "prefer-single"],
+     "no-else-return": [0]
   }
 }

@@ -7,6 +7,12 @@ const MapPhotoWrapper = styled.img`
   height: 50px;
   border-radius: 5px;
   border: 4px solid white;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  &:hover {
+    transform: scale(1.5);
+    opacity: 1;
+  }
 `
 
 export default function MapPhoto(props) {
@@ -14,8 +20,8 @@ export default function MapPhoto(props) {
     <MapPhotoWrapper
       lat={props.lat}
       lng={props.lng}
-      src={props.src}
-      alt={props.alt}
+      src={props.image}
+      alt={props.name}
     />
   )
 }
@@ -23,10 +29,10 @@ export default function MapPhoto(props) {
 MapPhoto.propTypes = {
   lat: PropTypes.number.isRequired,
   lng: PropTypes.number.isRequired,
-  src: PropTypes.string.isRequired,
-  alt: PropTypes.string,
+  image: PropTypes.string.isRequired,
+  name: PropTypes.string,
 }
 
 MapPhoto.defaultProps = {
-  alt: '',
+  name: 'Some image',
 }
