@@ -19,7 +19,7 @@ const AddEntryButtonDiv = styled.div`
 export default function AddEntryButton(props) {
   return (
     <AddEntryButtonDiv onClick={props.onClick}>
-      +
+      {'+'}
     </AddEntryButtonDiv>
   )
 }
