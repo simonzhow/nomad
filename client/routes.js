@@ -4,9 +4,11 @@ import { Route, IndexRoute } from 'react-router'
 import App from './modules/App/App'
 import SidebarFrame from './components/SidebarFrame'
 import LandingPage from './pages/LandingPage'
+<<<<<<< HEAD
 import Leaderboard from './components/Leaderboard'
 import Map from './components/Map'
 import Experiences from './components/Experiences/Experiences'
+import Onboard from './pages/Onboarding'
 
 // require.ensure polyfill for node
 if (typeof require.ensure !== 'function') {
@@ -34,6 +36,7 @@ export default (
       <Route path='/leaderboard' component={Leaderboard} />
       <Route path='/map' component={Map} />
       <Route path='/experiences' component={Experiences} />
+      <Route path='/onboard' component={Onboard} />
     </Route>
   </Route>
 )

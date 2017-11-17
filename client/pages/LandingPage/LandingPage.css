@@ -30,8 +30,7 @@
 	animation: changeImage 4s infinite;
 }
 
-.landingLogo {
-	width: 15em;
+.landingCenterContent {
 	position: absolute;
 	top: 40vh;
 	margin-left: auto;
@@ -39,7 +38,28 @@
 	left:0;
 	right: 0;
 	z-index: 10;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+	align-items: center;
 }
+
+.landingCenterContent > img {
+	width: 15em;
+}
+
+.landingButton{
+	margin-top: 1em;
+	padding: .8em 1.2em .8em 1.2em;
+	color: black;
+	background-color: white;
+	border-radius: 1.5em;
+	font-size: .7em;
+	letter-spacing: 1px;
+	cursor: pointer;
+}
+
 /* Standard syntax */
 @keyframes changeImage {
 	0% {opacity: 0;}

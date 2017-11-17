@@ -44,7 +44,10 @@ export class LandingPage extends Component {
   render() {
     return (
       <div className={styles.container}>
-        <img alt='logo' className={styles.landingLogo} src={logo} />
+        <div className={styles.landingCenterContent}>
+          <img alt='logo' src={logo} />
+          <a href='/onboard'><div className={styles.landingButton}>Join the community</div></a>
+        </div>
         <div className={styles.splashContainer}>
           <div className={styles.splashcard} style={this.getBackgroundStyle(0)}></div>
           <div className={styles.splashcard} style={this.getBackgroundStyle(3)}></div>
