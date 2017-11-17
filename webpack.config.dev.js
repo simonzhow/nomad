@@ -12,7 +12,7 @@ module.exports = {
       'webpack-hot-middleware/client',
       'webpack/hot/only-dev-server',
       'react-hot-loader/patch',
-      './client/index.jsx',
+      './client/index.js',
     ],
     vendor: [
       'react',

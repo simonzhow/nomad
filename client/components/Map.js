@@ -2,6 +2,7 @@ import React from 'react'
 import GoogleMapReact from 'google-map-react'
 import styled from 'styled-components'
 import AddEntryButton from './AddEntryButton'
+import AddEntryModal from './AddEntryModal'
 import MapPhoto from './MapPhoto'
 import MapMarker from './MapMarker'
 
@@ -17,6 +18,13 @@ const MapWrapper = styled.div`
   position: relative;
 `
 
+const GoogleMapReactWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  filter: ${props => { return props.blur ? 'brightness(0.5)' : 'none' }};
+`
+
 const MapToolsOverlay = styled.div`
   position: absolute;
   top: 0;
@@ -24,8 +32,18 @@ const MapToolsOverlay = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
-  padding: 20px;
+  justify-content: flex-start;
+  padding: 10px 50px 20px 20px;
+
+`
+
+const AddEntryModalWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 75%;
+  max-width: 500px;
+  transform: translate(-50%, -50%);
 `
 
 export default class Map extends React.Component {
@@ -33,13 +51,13 @@ export default class Map extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      entryModalOpen: false,
+      addEntryModalOpen: false,
     }
-    this.toggleEntryModal = this.toggleEntryModal.bind(this)
+    this.toggleAddEntryModal = this.toggleAddEntryModal.bind(this)
   }
 
-  toggleEntryModal() {
-    this.setState({ entryModalOpen: !this.state.entryModalOpen })
+  toggleAddEntryModal() {
+    this.setState({ addEntryModalOpen: !this.state.addEntryModalOpen })
   }
 
   renderTravelEntries() {
@@ -70,18 +88,29 @@ export default class Map extends React.Component {
   render() {
     return (
       <MapWrapper>
-        <GoogleMapReact
-          bootstrapURLKeys={gMapConfig}
-          defaultCenter={{ lat: 47.44642, lng: -122.29949 }}
-          defaultZoom={11}
-        >
-          {this.renderTravelEntries()}
-        </GoogleMapReact>
+        <GoogleMapReactWrapper blur={this.state.addEntryModalOpen}>
+          <GoogleMapReact
+            bootstrapURLKeys={gMapConfig}
+            defaultCenter={{ lat: 47.44642, lng: -122.29949 }}
+            defaultZoom={11}
+          >
+            {this.renderTravelEntries()}
+          </GoogleMapReact>
+        </GoogleMapReactWrapper>
 
         <MapToolsOverlay>
-          <AddEntryButton onClick={this.toggleEntryModal} />
+          <AddEntryButton
+            isOpen={this.state.addEntryModalOpen}
+            onClick={this.toggleAddEntryModal}
+          />
         </MapToolsOverlay>
 
+        {
+          this.state.addEntryModalOpen &&
+            <AddEntryModalWrapper>
+              <AddEntryModal />
+            </AddEntryModalWrapper>
+        }
       </MapWrapper>
     )
   }

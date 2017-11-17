@@ -1,13 +1,24 @@
 import React from 'react'
 import styled from 'styled-components'
-// import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router'
 
 const NavigationDiv = styled.div`
   text-align: center;
   margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  > a {
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `
 
-const NavigationButton = styled.button`
+const StyledNavLink = styled(Link)`
   width: 220px;
   height: 60px;
   margin-bottom: 25px;
@@ -26,16 +37,15 @@ const NavigationButton = styled.button`
     background-color: #66D6AE;
     color: white;
   }
-
 `
 
 export default function Navigation() {
   return (
     <NavigationDiv>
-      <NavigationButton>My Adventures</NavigationButton>
-      <NavigationButton>Leaderboard</NavigationButton>
-      <NavigationButton>Find Experiences</NavigationButton>
-      <NavigationButton>My Friends</NavigationButton>
+      <StyledNavLink to='/map'>My Adventures</StyledNavLink>
+      <StyledNavLink to='/leaderboard'>Leaderboard</StyledNavLink>
+      <StyledNavLink to='/'>Find Experiences</StyledNavLink>
+      <StyledNavLink to='/'>My Friends</StyledNavLink>
     </NavigationDiv>
 
   )

@@ -2,9 +2,10 @@
 import React from 'react'
 import { Route, IndexRoute } from 'react-router'
 import App from './modules/App/App'
+import SidebarFrame from './components/SidebarFrame'
 import LandingPage from './pages/LandingPage'
-import LeaderboardPage from './pages/LeaderboardPage'
-import MapPage from './pages/MapPage'
+import Leaderboard from './components/Leaderboard'
+import Map from './components/Map'
 
 // require.ensure polyfill for node
 if (typeof require.ensure !== 'function') {
@@ -19,8 +20,6 @@ if (typeof require.ensure !== 'function') {
  */
 if (process.env.NODE_ENV !== 'production') {
   // Require async routes only in development for react-hot-reloader to work.
-  require('./modules/Post/pages/PostListPage/PostListPage')
-  require('./modules/Post/pages/PostDetailPage/PostDetailPage')
 }
 
 // react-router setup with code-splitting
@@ -28,7 +27,10 @@ if (process.env.NODE_ENV !== 'production') {
 export default (
   <Route path='/' component={App}>
     <IndexRoute component={LandingPage} />
-    <Route path='/leaderboard' component={LeaderboardPage} />
-    <Route path='/map' component={MapPage} />
+    <Route path='/' component={SidebarFrame}>
+      <IndexRoute component={Leaderboard} />
+      <Route path='/leaderboard' component={Leaderboard} />
+      <Route path='/map' component={Map} />
+    </Route>
   </Route>
 )
