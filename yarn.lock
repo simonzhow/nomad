@@ -2999,6 +2999,10 @@ exenv@^1.2.1:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/exenv/-/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
 
+exif-js@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/exif-js/-/exif-js-2.3.0.tgz#9d10819bf571f873813e7640241255ab9ce1a814"
+
 exit-hook@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/exit-hook/-/exit-hook-1.1.1.tgz#f05ca233b48c05d54fff07765df8507e95c02ff8"
@@ -3868,6 +3872,10 @@ ignore@^3.1.2:
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.3.7.tgz#612289bfb3c220e186a58118618d5be8c1bab021"
 
+imageinfo@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/imageinfo/-/imageinfo-1.0.4.tgz#1dd2456ecb96fc395f0aa1179c467dfb3d5d7a2a"
+
 immutable@^3.8.1:
   version "3.8.2"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
@@ -4659,7 +4667,7 @@ lodash.debounce@^3.1.1:
   dependencies:
     lodash._getnative "^3.0.0"
 
-lodash.debounce@^4.0.3, lodash.debounce@^4.0.4:
+lodash.debounce@^4.0.3, lodash.debounce@^4.0.4, lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
 
@@ -6691,6 +6699,13 @@ react-json-tree@^0.10.8:
     babel-runtime "^6.6.1"
     prop-types "^15.5.8"
     react-base16-styling "^0.5.1"
+
+react-places-autocomplete@^5.4.3:
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/react-places-autocomplete/-/react-places-autocomplete-5.4.3.tgz#321166247a9279b93ff21ee59112836058dda0ba"
+  dependencies:
+    lodash.debounce "^4.0.8"
+    prop-types "^15.5.8"
 
 react-proxy@^3.0.0-alpha.0:
   version "3.0.0-alpha.1"

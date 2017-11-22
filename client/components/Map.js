@@ -5,13 +5,9 @@ import AddEntryButton from './AddEntryButton'
 import AddEntryModal from './AddEntryModal'
 import MapPhoto from './MapPhoto'
 import MapMarker from './MapMarker'
+import GMAP_CONFIG from '../config/google-maps'
 
 import travelEntries from '../dummy-data/travel-entries'
-
-const gMapConfig = {
-  key: 'AIzaSyCD8VMEGCp---T6qeG3CV5u9ISqatQ0LE0',
-  language: 'en',
-}
 
 const MapWrapper = styled.div`
   flex-grow: 1;
@@ -41,8 +37,8 @@ const AddEntryModalWrapper = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 75%;
-  max-width: 500px;
+  width: 85%;
+  max-width: 900px;
   transform: translate(-50%, -50%);
 `
 
@@ -90,9 +86,9 @@ export default class Map extends React.Component {
       <MapWrapper>
         <GoogleMapReactWrapper blur={this.state.addEntryModalOpen}>
           <GoogleMapReact
-            bootstrapURLKeys={gMapConfig}
-            defaultCenter={{ lat: 47.44642, lng: -122.29949 }}
-            defaultZoom={11}
+            bootstrapURLKeys={GMAP_CONFIG.bootstrapURLKeys}
+            defaultCenter={GMAP_CONFIG.defaultCenter}
+            defaultZoom={GMAP_CONFIG.defaultZoom}
           >
             {this.renderTravelEntries()}
           </GoogleMapReact>
