@@ -20,6 +20,20 @@ const AddEntryModalWrapper = styled.div`
   animation: ${growIn} 0.5s ease;
 `
 
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: row;
+`
+
+const FormColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 50%;
+  padding: 20px;
+`
+
 const FormTitle = styled.div`
   color: ${colors.green};
   font-size: 24px;
@@ -54,25 +68,7 @@ const FormTextArea = styled.textarea`
   border-radius: 2px;
   border: 1px solid ${colors.lightGray};
   width: 100%;
-  height: 180px;
-`
-
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: row;
-`
-
-const FormColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  width: 50%;
-  padding: 20px;
-`
-
-const FormMapItem = FormItemDiv.extend`
-  height: 100%;
+  height: 100px;
 `
 
 const FormItem = (props) => {
@@ -138,13 +134,12 @@ export default class AddEntryModal extends React.Component {
 
           <FormColumn>
 
-            <FormMapItem>
-              <FormLabel>Location</FormLabel>
+            <FormItem name='Location'>
               <LocationSelector
                 photoCoordinates={photo && photo.coordinates}
                 onNewCoordinates={this.handleNewCoordinates}
               />
-            </FormMapItem>
+            </FormItem>
 
           </FormColumn>
 

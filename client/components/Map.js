@@ -30,7 +30,6 @@ const MapToolsOverlay = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   padding: 10px 50px 20px 20px;
-
 `
 
 const AddEntryModalWrapper = styled.div`
