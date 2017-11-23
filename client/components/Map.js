@@ -72,7 +72,6 @@ export default class Map extends React.Component {
         return (
           <MapMarker
             key={entry.name}
-            name={entry.name}
             lat={entry.location.latitude}
             lng={entry.location.longitude}
           />

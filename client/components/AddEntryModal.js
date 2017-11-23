@@ -1,10 +1,9 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled, { keyframes } from 'styled-components'
 import { colors } from '../constants/styles'
-import Button from './Button'
 import LocationSelector from './LocationSelector'
-import { dmsToDecimal } from '../util/geo-helpers'
-import EXIF from 'exif-js'
+import ImageChooser from './ImageChooser'
 
 const growIn = keyframes`
   from { transform: scale(0); opacity: 0; }
@@ -28,7 +27,7 @@ const FormTitle = styled.div`
   text-align: center;
 `
 
-const FormItem = styled.div`
+const FormItemDiv = styled.div`
   margin-bottom: 10px;
   width: 100%;
 `
@@ -72,28 +71,26 @@ const FormColumn = styled.div`
   padding: 20px;
 `
 
-const FormMapItem = FormItem.extend`
-  display: flex;
-  flex-direction: column;
+const FormMapItem = FormItemDiv.extend`
   height: 100%;
 `
 
-const HiddenInput = styled.input`
-  visibility: hidden;
-  position: absolute;
-  width: 0;
-  height: 0;
-`
+const FormItem = (props) => {
+  return (
+    <FormItemDiv innerRef={props.innerRef}>
+      <FormLabel>{props.name}</FormLabel>
+      <div>
+        {props.children}
+      </div>
+    </FormItemDiv>
+  )
+}
 
-const FormNote = styled.p`
-  font-style: italic;
-  font-size: 11px;
-  line-height: 14px;
-  color: ${colors.gray};
-  margin: 4px 0px;
-`
-
-const POINTS_WARNING_TEXT = '** You can only earn points if you use the location from a photo.'
+FormItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  innerRef: PropTypes.func,
+}
 
 export default class AddEntryModal extends React.Component {
   constructor(props) {
@@ -104,74 +101,8 @@ export default class AddEntryModal extends React.Component {
     }
 
     this.photoUploadInput = null
-    this.handleLocationChange = this.handleLocationChange.bind(this)
-    this.handleNewFileInput = this.handleNewFileInput.bind(this)
-    this.triggerPhotoUploadDialog = this.triggerPhotoUploadDialog.bind(this)
-  }
-
-  handleLocationChange(newCoordinates) {
-    this.setState({ coordinates: newCoordinates })
-  }
-
-  handleNewFileInput() {
-    const file = this.photoUploadInput.files[0]
-    const reader = new FileReader()
-    const component = this
-
-    // When the file reader finishes reading the selected file
-    reader.onload = () => {
-      // Create a hidden img tag on the document (required in order to use the
-      // exif-js library to parse it for metadata
-      const img = document.createElement('img')
-      img.src = reader.result
-      img.hidden = true
-
-      // Set a callback for when the image finishes loading on the page
-      // Callback will try to extract coordinates from image metadata
-      img.onload = function () {
-        EXIF.getData(this, function () {
-          const latExif = {
-            value: EXIF.getTag(this, 'GPSLatitude'),
-            dir: EXIF.getTag(this, 'GPSLatitudeRef'),
-          }
-          const lngExif = {
-            value: EXIF.getTag(this, 'GPSLongitude'),
-            dir: EXIF.getTag(this, 'GPSLongitudeRef'),
-          }
-
-          // Initialize photo object to update component state with
-          const photo = { coordinates: null }
-          // If coordinates exist, update photo object
-          if (latExif.value && latExif.dir && lngExif.value && lngExif.dir) {
-            const absLat = dmsToDecimal(latExif.value.map(val => val.valueOf()))
-            const lat = latExif.dir.toLowerCase() === 's' ? -absLat : absLat
-            const absLng = dmsToDecimal(lngExif.value.map(val => val.valueOf()))
-            const lng = lngExif.dir.toLowerCase() === 'w' ? -absLng : absLng
-
-            if (lat && lng) {
-              photo.coordinates = { lat, lng }
-            }
-          }
-
-          // Update state with photo object
-          component.setState({ photo })
-
-          // Remove image from DOM since we're done parsing it for coordinates
-          document.body.removeChild(img)
-        })
-      }
-
-      // Add image onto DOM so that exif-js can properly parse it
-      document.body.appendChild(img)
-    }
-
-    reader.readAsDataURL(file)
-  }
-
-  triggerPhotoUploadDialog() {
-    if (this.photoUploadInput) {
-      this.photoUploadInput.click()
-    }
+    this.handleNewCoordinates = (coordinates) => { this.setState({ coordinates }) }
+    this.handleNewPhoto = (photo) => { this.setState({ photo }) }
   }
 
   render() {
@@ -184,8 +115,7 @@ export default class AddEntryModal extends React.Component {
         <StyledForm>
           <FormColumn>
 
-            <FormItem>
-              <FormLabel>Name</FormLabel>
+            <FormItem name='Name'>
               <FormInput
                 type='text'
                 name='name'
@@ -193,26 +123,15 @@ export default class AddEntryModal extends React.Component {
               />
             </FormItem>
 
-            <FormItem>
-              <FormLabel>Description</FormLabel>
+            <FormItem name='Description'>
               <FormTextArea
                 name='name'
                 placeholder='It only took me 3 hours!'
               />
             </FormItem>
 
-            <FormItem>
-              <FormLabel>Photo</FormLabel>
-              <HiddenInput
-                innerRef={input => { this.photoUploadInput = input }}
-                onChange={this.handleNewFileInput}
-                type='file'
-              />
-              <Button
-                onClick={this.triggerPhotoUploadDialog}
-              >
-                Choose File
-              </Button>
+            <FormItem name='Photo'>
+              <ImageChooser onNewPhoto={this.handleNewPhoto} />
             </FormItem>
 
           </FormColumn>
@@ -222,10 +141,9 @@ export default class AddEntryModal extends React.Component {
             <FormMapItem>
               <FormLabel>Location</FormLabel>
               <LocationSelector
-                overrideCoordinates={photo && photo.coordinates}
-                onNewCoordinates={this.handleLocationChange}
+                photoCoordinates={photo && photo.coordinates}
+                onNewCoordinates={this.handleNewCoordinates}
               />
-              <FormNote>{POINTS_WARNING_TEXT}</FormNote>
             </FormMapItem>
 
           </FormColumn>

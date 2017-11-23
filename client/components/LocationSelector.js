@@ -9,7 +9,6 @@ import GMAP_CONFIG from '../config/google-maps'
 
 const LocationSelectorWrapper = styled.div`
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
 `
@@ -32,43 +31,71 @@ const PlacesDropdown = styled.div`
 const MapWrapper = styled.div`
   position: relative;
   z-index: 0;
-  height: 100%;
+  height: ${props => props.height || 300}px;
   width: 100%;
 `
+
+const PHOTO_SELECTION_MODE = { id: 'photo', text: 'From Photo' }
+const CUSTOM_SELECTION_MODE = { id: 'custom', text: 'Custom' }
 
 export default class LocationSelector extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      selectModeId: props.overrideCoordinates ? 'photo' : 'custom',
+      selectModeId: props.photoCoordinates ? 'photo' : 'custom',
       searchQuery: '',
       coordinates: GMAP_CONFIG.defaultCenter,
+      mapWidth: null,
     }
-
-    this.modes = [
-      { id: 'photo', text: 'From Photo' },
-      { id: 'custom', text: 'Custom' },
-    ]
 
     this.handleSearchChange = (searchQuery) => {
       this.setState({ searchQuery })
     }
     this.handlePlaceSelection = this.handlePlaceSelection.bind(this)
     this.handleModeChange = this.handleModeChange.bind(this)
+    this.updateMapWidth = this.updateMapWidth.bind(this)
   }
 
-  getMapCenter() {
-    const { overrideCoordinates } = this.props
+  componentDidMount() {
+    this.updateMapWidth()
+    window.addEventListener('resize', this.updateMapWidth)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // debugger
+    if (nextProps.photoCoordinates && !this.props.photoCoordinates) {
+      // If the selector just got passed photo coordiantes, switch to those
+      // coordinates instead of using custom coordinates
+      this.setState({ selectModeId: 'photo' })
+    } else if (this.props.photoCoordinates && !nextProps.photoCoordinates) {
+      // If the selector just lost its photo coordinate props, switch back to
+      // custom coordinate selection
+      this.setState({ selectModeId: 'custom' })
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateMapWidth)
+  }
+
+  decideMapCenter() {
+    const { photoCoordinates } = this.props
     const { selectModeId, coordinates } = this.state
     switch (selectModeId) {
       case 'photo':
-        return overrideCoordinates
+        return photoCoordinates
       case 'custom':
         return coordinates
       default:
         return null
     }
+  }
+
+  updateMapWidth() {
+    // Need to manage map dimensions in state so that it can reliably be a
+    // responsive square
+    this.setState({ mapWidth: this.mapWrapper.clientWidth })
   }
 
   handlePlaceSelection(searchQuery) {
@@ -91,23 +118,32 @@ export default class LocationSelector extends React.Component {
   }
 
   render() {
+    const { photoCoordinates } = this.props
+    const { selectModeId } = this.state
     const placesAutocompleteProps = {
       value: this.state.searchQuery,
       onChange: this.handleSearchChange,
       placeholder: 'Search for a location...',
     }
 
-    const { selectModeId } = this.state
-    const mapCenter = this.getMapCenter()
+    const selectorOptions = [CUSTOM_SELECTION_MODE]
+    if (photoCoordinates) {
+      selectorOptions.push(PHOTO_SELECTION_MODE)
+    }
+
+    const mapCenter = this.decideMapCenter()
 
     return (
       <LocationSelectorWrapper>
 
-        <OptionSelector
-          options={this.modes}
-          selectedOptionId={selectModeId}
-          onChange={this.handleModeChange}
-        />
+        {
+          selectorOptions.length > 1 &&
+            <OptionSelector
+              options={selectorOptions}
+              selectedOptionId={selectModeId}
+              onChange={this.handleModeChange}
+            />
+        }
 
         <LocationViewWrapper>
           {
@@ -120,7 +156,11 @@ export default class LocationSelector extends React.Component {
                 />
               </PlacesDropdown>
           }
-          <MapWrapper>
+          <MapWrapper
+            className='map-wrapper'
+            innerRef={div => { this.mapWrapper = div }}
+            height={this.state.mapWidth}
+          >
             <GoogleMapReact
               bootstrapURLKeys={GMAP_CONFIG.bootstrapURLKeys}
               defaultCenter={GMAP_CONFIG.defaultCenter}
@@ -144,6 +184,6 @@ export default class LocationSelector extends React.Component {
 }
 
 LocationSelector.propTypes = {
-  overrideCoordinates: PropTypes.object,
+  photoCoordinates: PropTypes.object,
   onNewCoordinates: PropTypes.func.isRequired,
 }
