@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import GoogleMapReact from 'google-map-react'
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 import OptionSelector from './OptionSelector'
+import MapMarker from './MapMarker'
 import GMAP_CONFIG from '../config/google-maps'
 
 const LocationSelectorWrapper = styled.div`
@@ -40,7 +41,7 @@ export default class LocationSelector extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectModeId: props.photoCoordinates ? 'photo' : 'custom',
+      selectModeId: props.overrideCoordinates ? 'photo' : 'custom',
       searchQuery: '',
       coordinates: GMAP_CONFIG.defaultCenter,
     }
@@ -57,8 +58,23 @@ export default class LocationSelector extends React.Component {
     this.handleModeChange = this.handleModeChange.bind(this)
   }
 
+  getMapCenter() {
+    const { overrideCoordinates } = this.props
+    const { selectModeId, coordinates } = this.state
+    switch (selectModeId) {
+      case 'photo':
+        return overrideCoordinates
+      case 'custom':
+        return coordinates
+      default:
+        return null
+    }
+  }
+
   handlePlaceSelection(searchQuery) {
     this.setState({ searchQuery })
+
+    // Use Google Places API to try to get the coordinates from the search query
     geocodeByAddress(searchQuery)
       .then(results => getLatLng(results[0]))
       .then(coordinates => {
@@ -81,19 +97,22 @@ export default class LocationSelector extends React.Component {
       placeholder: 'Search for a location...',
     }
 
+    const { selectModeId } = this.state
+    const mapCenter = this.getMapCenter()
+
     return (
       <LocationSelectorWrapper>
 
         <OptionSelector
           options={this.modes}
-          selectedOptionId={this.state.selectModeId}
+          selectedOptionId={selectModeId}
           onChange={this.handleModeChange}
         />
 
         <LocationViewWrapper>
           {
             /* Only show places dropdown if user is selected a custom location */
-            this.state.selectModeId === 'custom' &&
+            selectModeId === 'custom' &&
               <PlacesDropdown>
                 <PlacesAutocomplete
                   inputProps={placesAutocompleteProps}
@@ -105,9 +124,18 @@ export default class LocationSelector extends React.Component {
             <GoogleMapReact
               bootstrapURLKeys={GMAP_CONFIG.bootstrapURLKeys}
               defaultCenter={GMAP_CONFIG.defaultCenter}
-              center={this.state.coordinates}
+              center={mapCenter}
               defaultZoom={GMAP_CONFIG.defaultZoom}
-            />
+            >
+              {
+                mapCenter &&
+                  <MapMarker
+                    lat={mapCenter.lat}
+                    lng={mapCenter.lng}
+                    name={'x'}
+                  />
+              }
+            </GoogleMapReact>
           </MapWrapper>
         </LocationViewWrapper>
       </LocationSelectorWrapper>
@@ -116,6 +144,6 @@ export default class LocationSelector extends React.Component {
 }
 
 LocationSelector.propTypes = {
-  photoCoordinates: PropTypes.object,
+  overrideCoordinates: PropTypes.object,
   onNewCoordinates: PropTypes.func.isRequired,
 }
