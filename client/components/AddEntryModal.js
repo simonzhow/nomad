@@ -58,6 +58,12 @@ const FormLabel = styled.div`
   color: ${colors.black};
   font-size: 16px;
   margin-bottom: 5px;
+  ${props => (props.required && `
+    :after {
+      content: '*';
+      color: red;
+    }
+  `)}
 `
 
 const FormInput = styled.input`
@@ -90,7 +96,7 @@ const FormNote = styled.p`
 const FormItem = (props) => {
   return (
     <FormItemDiv innerRef={props.innerRef}>
-      <FormLabel>{props.name}</FormLabel>
+      <FormLabel required={props.required}>{props.name}</FormLabel>
       <div>
         {props.children}
       </div>
@@ -100,6 +106,7 @@ const FormItem = (props) => {
 
 FormItem.propTypes = {
   name: PropTypes.string.isRequired,
+  required: PropTypes.bool,
   children: PropTypes.node.isRequired,
   innerRef: PropTypes.func,
 }
@@ -141,7 +148,7 @@ export default class AddEntryModal extends React.Component {
           <ColumnsWrapper>
             <FormColumn>
 
-              <FormItem name='Name (required)'>
+              <FormItem name='Name' required>
                 <FormInput
                   onChange={this.handleNameChange}
                   type='text'
@@ -150,7 +157,7 @@ export default class AddEntryModal extends React.Component {
                 />
               </FormItem>
 
-              <FormItem name='Description (required)'>
+              <FormItem name='Description' required>
                 <FormTextArea
                   onChange={this.handleDescriptionChange}
                   name='name'
@@ -166,7 +173,7 @@ export default class AddEntryModal extends React.Component {
 
             <FormColumn>
 
-              <FormItem name='Location (required)'>
+              <FormItem name='Location' required>
                 <FormNote>{LOCATION_FROM_PHOTO_MESSAGE}</FormNote>
                 <LocationSelector
                   photoCoordinates={photo && photo.coordinates}
