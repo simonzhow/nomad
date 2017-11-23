@@ -37,8 +37,7 @@ const PhotoUploadDiv = styled.div`
 `
 
 const Caption = styled.p`
-  font-style: italic;
-  font-size: 11px;
+  font-size: 9px;
   line-height: 14px;
   color: ${colors.gray};
   margin: 4px 0px;

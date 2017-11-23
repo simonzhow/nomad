@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled, { keyframes } from 'styled-components'
 import { colors } from '../constants/styles'
+import Button from './Button'
 import LocationSelector from './LocationSelector'
 import ImageChooser from './ImageChooser'
 
@@ -22,7 +23,14 @@ const AddEntryModalWrapper = styled.div`
 
 const StyledForm = styled.form`
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+`
+
+const ColumnsWrapper = styled.div`
+  display: flex;
   flex-direction: row;
+  width: 100%;
 `
 
 const FormColumn = styled.div`
@@ -71,6 +79,14 @@ const FormTextArea = styled.textarea`
   height: 100px;
 `
 
+const FormNote = styled.p`
+  font-style: italic;
+  font-size: 9px;
+  line-height: 14px;
+  color: ${colors.gray};
+  margin: 4px 0px;
+`
+
 const FormItem = (props) => {
   return (
     <FormItemDiv innerRef={props.innerRef}>
@@ -88,17 +104,30 @@ FormItem.propTypes = {
   innerRef: PropTypes.func,
 }
 
+const LOCATION_FROM_PHOTO_MESSAGE = 'We\'ll try our best to grab the location data from a photo if you provide one!'
+
 export default class AddEntryModal extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      name: '',
+      description: '',
       photo: null,
       coordinates: null,
     }
 
     this.photoUploadInput = null
-    this.handleNewCoordinates = (coordinates) => { this.setState({ coordinates }) }
+    this.handleNameChange = (evt) => { this.setState({ name: evt.target.value }) }
+    this.handleDescriptionChange = (evt) => { this.setState({ description: evt.target.value }) }
     this.handleNewPhoto = (photo) => { this.setState({ photo }) }
+    this.handleNewCoordinates = (coordinates) => { this.setState({ coordinates }) }
+  }
+
+  isReadyToSubmit() {
+    const { name, description, photo, coordinates } = this.state
+    return Boolean(
+      name && description && ((photo && photo.coordinates) || coordinates)
+    )
   }
 
   render() {
@@ -109,39 +138,48 @@ export default class AddEntryModal extends React.Component {
         <FormTitle>Add a Travel Entry</FormTitle>
 
         <StyledForm>
-          <FormColumn>
+          <ColumnsWrapper>
+            <FormColumn>
 
-            <FormItem name='Name'>
-              <FormInput
-                type='text'
-                name='name'
-                placeholder='Hiked Mt. Everest'
-              />
-            </FormItem>
+              <FormItem name='Name (required)'>
+                <FormInput
+                  onChange={this.handleNameChange}
+                  type='text'
+                  name='name'
+                  placeholder='Hiked Mt. Everest'
+                />
+              </FormItem>
 
-            <FormItem name='Description'>
-              <FormTextArea
-                name='name'
-                placeholder='It only took me 3 hours!'
-              />
-            </FormItem>
+              <FormItem name='Description (required)'>
+                <FormTextArea
+                  onChange={this.handleDescriptionChange}
+                  name='name'
+                  placeholder='It only took me 3 hours!'
+                />
+              </FormItem>
 
-            <FormItem name='Photo'>
-              <ImageChooser onNewPhoto={this.handleNewPhoto} />
-            </FormItem>
+              <FormItem name='Photo'>
+                <ImageChooser onNewPhoto={this.handleNewPhoto} />
+              </FormItem>
 
-          </FormColumn>
+            </FormColumn>
 
-          <FormColumn>
+            <FormColumn>
 
-            <FormItem name='Location'>
-              <LocationSelector
-                photoCoordinates={photo && photo.coordinates}
-                onNewCoordinates={this.handleNewCoordinates}
-              />
-            </FormItem>
+              <FormItem name='Location (required)'>
+                <FormNote>{LOCATION_FROM_PHOTO_MESSAGE}</FormNote>
+                <LocationSelector
+                  photoCoordinates={photo && photo.coordinates}
+                  onNewCoordinates={this.handleNewCoordinates}
+                />
+              </FormItem>
 
-          </FormColumn>
+            </FormColumn>
+          </ColumnsWrapper>
+
+          <Button disabled={!this.isReadyToSubmit()}>
+            Submit
+          </Button>
 
         </StyledForm>
       </AddEntryModalWrapper>
