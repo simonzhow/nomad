@@ -8,7 +8,7 @@ const AddEntryButtonDiv = styled.div`
   height: 50px;
   border: 2px solid transparent;
   border-radius: 50%;
-  background-color: ${props => { return props.isOpen ? colors.red : colors.blue }};
+  background-color: ${props => { return props.isOpen ? colors.red : colors.green }};
   color: ${colors.white};
   font-size: 40px;
   display: flex;
@@ -35,6 +35,6 @@ export default function AddEntryButton(props) {
 }
 
 AddEntryButton.propTypes = {
-  isOpen: PropTypes.boolean,
+  isOpen: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
 }

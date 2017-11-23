@@ -13,8 +13,9 @@ const AddEntryModalWrapper = styled.div`
 `
 
 const FormTitle = styled.div`
-  color: ${colors.blue};
+  color: ${colors.green};
   font-size: 24px;
+  font-weight: bold;
   text-align: center;
 `
 
@@ -45,7 +46,7 @@ const FormTextArea = styled.textarea`
   border-radius: 2px;
   border: 1px solid ${colors.lightGray};
   width: 100%;
-  height: 100px;
+  height: 180px;
 `
 
 const StyledForm = styled.form`
@@ -68,15 +69,45 @@ const FormMapItem = FormItem.extend`
   height: 100%;
 `
 
+const HiddenInput = styled.input`
+  visibility: hidden;
+  position: absolute;
+  width: 0;
+  height: 0;
+`
+
+const FormNote = styled.p`
+  font-style: italic;
+  font-size: 11px;
+  line-height: 14px;
+  color: ${colors.gray};
+  margin: 4px 0px;
+`
+
+const POINTS_WARNING_TEXT = '** You can only earn points if you use the location from a photo.'
 
 export default class AddEntryModal extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {}
-    this.onLocationChange = newCoordinates => {
-      console.log(`a: ${newCoordinates.lat}, ${newCoordinates.lng}`)
+    this.state = {
+      coordinates: null,
+    }
+
+    this.photoUploadInput = null
+    this.handleLocationChange = this.handleLocationChange.bind(this)
+    this.triggerPhotoUploadDialog = this.triggerPhotoUploadDialog.bind(this)
+  }
+
+  handleLocationChange(newCoordinates) {
+    this.setState({ coordinates: newCoordinates })
+  }
+
+  triggerPhotoUploadDialog() {
+    if (this.photoUploadInput) {
+      this.photoUploadInput.click()
     }
   }
+
   render() {
     return (
       <AddEntryModalWrapper>
@@ -100,11 +131,15 @@ export default class AddEntryModal extends React.Component {
               />
             </FormItem>
             <FormItem>
-              <FormLabel>Photo(s)</FormLabel>
+              <FormLabel>Photo</FormLabel>
+              <HiddenInput
+                innerRef={input => { this.photoUploadInput = input }}
+                type='file'
+              />
               <Button
-                onClick={() => { alert('Upload dialog coming soon') }}
+                onClick={this.triggerPhotoUploadDialog}
               >
-                Choose File(s)
+                Choose File
               </Button>
             </FormItem>
           </FormColumn>
@@ -112,8 +147,9 @@ export default class AddEntryModal extends React.Component {
             <FormMapItem>
               <FormLabel>Location</FormLabel>
               <LocationSelector
-                onNewCoordinates={this.onLocationChange}
+                onNewCoordinates={this.handleLocationChange}
               />
+              <FormNote>{POINTS_WARNING_TEXT}</FormNote>
             </FormMapItem>
           </FormColumn>
         </StyledForm>
