@@ -28,6 +28,7 @@ export default (
   <Route path='/' component={App}>
     <IndexRoute component={LandingPage} />
     <Route path='/' component={SidebarFrame}>
+      {/* TODO: Set up proper index route (404 page) */}
       <IndexRoute component={Leaderboard} />
       <Route path='/leaderboard' component={Leaderboard} />
       <Route path='/map' component={Map} />

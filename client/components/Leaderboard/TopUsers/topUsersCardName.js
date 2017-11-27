@@ -4,8 +4,9 @@ import styles from 'styled-components'
 
 const TopUsersCardNameDiv = styles.div`
   text-align: center;
-  font-size: 12px;
+  font-size: 16px;
   margin-bottom: 15px;
+  font-weight: bold;
 `
 
 export default function TopUsersCardName(props) {
@@ -17,5 +18,8 @@ export default function TopUsersCardName(props) {
 }
 
 TopUsersCardName.propTypes = {
-  name: PropTypes.object,
+  name: PropTypes.shape({
+    first: PropTypes.string,
+    last: PropTypes.string,
+  }),
 }
