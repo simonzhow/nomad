@@ -1,31 +1,32 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styles from 'styled-components'
-
+import styled from 'styled-components'
 import TopUsers from './TopUsers/topUsers'
 import UsersTable from './UsersTable/usersTable'
+import users from '../../static/MembersData'
 
-const LeaderboardDiv = styles.div`
-  margin-left: 300px;
+const LeaderboardDiv = styled.div`
   padding: 30px;
   overflow: visible;
   transition: margin-left 0.125s ease-in-out;
 `
 
-const LeaderboardTitle = styles.h1`
+const LeaderboardTitle = styled.h1`
   text-align: center;
   margin-bottom: 30px;
 `
 
-export default function Leaderboard(props) {
-  const leaders = (props.members).slice(0, 3)
-  const users = (props.members).slice(3)
+export default function Leaderboard() {
+  const sortMembersByScore = (a, b) => (b.score - a.score)
+  const members = users.members.sort(sortMembersByScore)
+  const leaders = members.slice(0, 3)
+  const remainingMembers = members.slice(3)
 
   return (
     <LeaderboardDiv>
       <LeaderboardTitle>Leaderboard</LeaderboardTitle>
       <TopUsers leaders={leaders} />
-      <UsersTable users={users} />
+      <UsersTable users={remainingMembers} />
 
     </LeaderboardDiv>
   )

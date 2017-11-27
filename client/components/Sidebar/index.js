@@ -8,17 +8,12 @@ import Navigation from './navigation'
 import sidebarimage from '../../static/img/sidebar.png'
 
 const SidebarDiv = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 9;
-  overflow-y: scroll;
+  overflow-y: auto;
   width: 300px;
-  height: auto;
-  min-height: 100%;
+  height: 100%;
   transition: left 0.125s ease-in-out;
   background-image: url(${sidebarimage});
+  flex-shrink: 0;
 `
 
 const SidebarContainer = styled.div`
