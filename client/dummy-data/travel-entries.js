@@ -2,8 +2,8 @@ const entries = [
   {
     name: 'A Nice Walk through Normandy Park',
     location: {
-      latitude: 47.446,
-      longitude: -122.32,
+      lat: 47.446,
+      lng: -122.32,
     },
     images: [
       'https://media.licdn.com/mpr/mpr/shrinknp_200_200/AAEAAQAAAAAAAAt6AAAAJGVkNGM2ZDRhLTIwOTQtNDJkNC04ZDI4LWYwMzgxNDNmNDI4OQ.jpg',
@@ -13,8 +13,8 @@ const entries = [
   {
     name: 'Another Nice Walk through Normandy Park',
     location: {
-      latitude: 47.546,
-      longitude: -122.42,
+      lat: 47.546,
+      lng: -122.42,
     },
     images: [
     ],

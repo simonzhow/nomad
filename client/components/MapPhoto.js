@@ -18,8 +18,7 @@ const MapPhotoWrapper = styled.img`
 export default function MapPhoto(props) {
   return (
     <MapPhotoWrapper
-      lat={props.lat}
-      lng={props.lng}
+      onClick={props.onClick}
       src={props.image}
       alt={props.name}
     />
@@ -27,10 +26,9 @@ export default function MapPhoto(props) {
 }
 
 MapPhoto.propTypes = {
-  lat: PropTypes.number.isRequired,
-  lng: PropTypes.number.isRequired,
   image: PropTypes.string.isRequired,
   name: PropTypes.string,
+  onClick: PropTypes.func,
 }
 
 MapPhoto.defaultProps = {
