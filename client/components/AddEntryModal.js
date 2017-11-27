@@ -155,13 +155,13 @@ export default class AddEntryModal extends React.Component {
   }
 
   submit() {
-    const { name, description, photo, coordinates } = this.state
-    const isReadyToSubmit = Boolean(
-      name && description && ((photo && photo.coordinates) || coordinates)
-    )
-    if (isReadyToSubmit) {
-
-    }
+    // const { name, description, photo, coordinates } = this.state
+    // const isReadyToSubmit = Boolean(
+    //   name && description && ((photo && photo.coordinates) || coordinates)
+    // )
+    // if (isReadyToSubmit) {
+    //
+    // }
   }
 
   render() {
