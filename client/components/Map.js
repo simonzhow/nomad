@@ -3,11 +3,14 @@ import GoogleMapReact from 'google-map-react'
 import styled from 'styled-components'
 import AddEntryButton from './AddEntryButton'
 import AddEntryModal from './AddEntryModal'
-import MapPhoto from './MapPhoto'
 import MapMarker from './MapMarker'
 import GMAP_CONFIG, { ZOOM_LEVELS } from '../config/google-maps'
-
 import travelEntries from '../dummy-data/travel-entries'
+
+const MAP_PHOTO_DIMS = {
+  MIN: { SIZE: 15, ZOOM: 3 }, // Image is 15x15 at zoom level <= 3
+  MAX: { SIZE: 120, ZOOM: 15 }, // Image is 120x120 at zoom level >= 15
+}
 
 const MapWrapper = styled.div`
   flex-grow: 1;
@@ -68,6 +71,14 @@ export default class Map extends React.Component {
     this.setState({ addEntryModalOpen: !this.state.addEntryModalOpen })
   }
 
+  calculateImageSize() {
+    const { mapZoom } = this.state
+    const { MAX, MIN } = MAP_PHOTO_DIMS
+    const SIZE_RANGE = MAX.SIZE - MIN.SIZE
+    const ZOOM_RANGE = MAX.ZOOM - MIN.ZOOM
+    return MIN.SIZE + (((mapZoom - MIN.ZOOM) / ZOOM_RANGE) * SIZE_RANGE)
+  }
+
   zoomToMarker(lat, lng) {
     this.setState({ mapCenter: { lat, lng }, mapZoom: ZOOM_LEVELS.LOCAL })
   }
@@ -92,27 +103,17 @@ export default class Map extends React.Component {
   renderTravelEntries() {
     return travelEntries.map(entry => {
       const { name, images, location } = entry
-      if (images && images.length > 0) {
-        return (
-          <MapPhoto
-            key={name}
-            name={name}
-            lat={location.lat}
-            lng={location.lng}
-            image={images[0]}
-            onClick={this.zoomToMarker.bind(this, location.lat, location.lng)}
-          />
-        )
-      } else {
-        return (
-          <MapMarker
-            key={entry.name}
-            lat={entry.location.lat}
-            lng={entry.location.lng}
-            onClick={this.zoomToMarker.bind(this, location.lat, location.lng)}
-          />
-        )
-      }
+      return (
+        <MapMarker
+          key={name}
+          name={name}
+          lat={location.lat}
+          lng={location.lng}
+          images={images}
+          size={this.calculateImageSize()}
+          onClick={this.zoomToMarker.bind(this, location.lat, location.lng)}
+        />
+      )
     })
   }
 
