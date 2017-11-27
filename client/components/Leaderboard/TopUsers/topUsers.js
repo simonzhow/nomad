@@ -4,6 +4,8 @@ import styles from 'styled-components'
 
 import TopUsersCard from './topUsersCard'
 
+const LEADER_OFFSET = 1
+
 const TopUsersDiv = styles.div`
   justify-content: center;
   display: flex;
@@ -18,7 +20,8 @@ export default function TopUsers(props) {
           <TopUsersCard
             name={member.name}
             score={member.score}
-            position={i + 1}
+            rank={member.rank}
+            position={i + LEADER_OFFSET}
             facebook={member.facebook}
             key={i}
           />
