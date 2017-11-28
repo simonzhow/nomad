@@ -6,6 +6,7 @@ import SidebarFrame from './components/SidebarFrame'
 import LandingPage from './pages/LandingPage'
 import Leaderboard from './components/Leaderboard'
 import Map from './components/Map'
+import Experiences from './components/Experiences/Experiences'
 
 // require.ensure polyfill for node
 if (typeof require.ensure !== 'function') {
@@ -32,6 +33,7 @@ export default (
       <IndexRoute component={Leaderboard} />
       <Route path='/leaderboard' component={Leaderboard} />
       <Route path='/map' component={Map} />
+      <Route path='/experiences' component={Experiences} />
     </Route>
   </Route>
 )
