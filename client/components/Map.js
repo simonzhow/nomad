@@ -59,7 +59,7 @@ export default class Map extends React.Component {
     this.handleOutsideClick = this.handleOutsideClick.bind(this)
   }
 
-  componentWillMount() {
+  componentDidMount() {
     document.addEventListener('mousedown', this.handleOutsideClick)
   }
 
@@ -88,15 +88,18 @@ export default class Map extends React.Component {
   }
 
   handleOutsideClick(event) {
-    // If the click was on the close button, ignore it here and let the button's
-    // handler take care of it
-    if (this.addEntryButton && this.addEntryButton.contains(event.target)) {
-      return
-    }
-
-    // If the click was outside of the modal, close the modal
-    if (this.addEntryModal && !this.addEntryModal.contains(event.target)) {
-      this.setState({ addEntryModalOpen: false })
+    if (this.addEntryModal) {
+      // NOTE: Can't use Node.contains() for this functionality because
+      // Places autocomplete option divs disappear before they can be read
+      // by this function so it would give false positive outside clicks
+      const { x, y, width, height } = this.addEntryModal.getBoundingClientRect()
+      const { clientX: clickX, clientY: clickY } = event
+      if (
+        clickX < x || clickX > x + width ||
+        clickY < y || clickY > y + height
+      ) {
+        this.setState({ addEntryModalOpen: false })
+      }
     }
   }
 
