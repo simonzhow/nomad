@@ -154,7 +154,7 @@ export default class Experiences extends React.Component {
     }&longitude=${parseFloat(this.state.longitude)}&categories=${category},all&radius=5000`
     fetch(proxyurl + yelpApi + querystring, requestParams).then(res => res.json())
       .then((out) => {
-        console.log(out)
+        // console.log(out)
         this.setState({
           experiences: out.businesses,
           category: categories[category],
@@ -193,7 +193,7 @@ export default class Experiences extends React.Component {
     return (<Title>
       near your current location,&nbsp;
       {this.state.city}&nbsp;({this.state.latitude}, {this.state.longitude})
-            </Title>)
+    </Title>)
   }
 
   selectExperienceCategory(option) {
