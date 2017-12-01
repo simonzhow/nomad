@@ -2,6 +2,7 @@ import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import StarRatings from 'react-star-ratings'
 import Dropdown from 'react-dropdown'
+import axios from 'axios'
 import { colors, shadows } from '../../constants/styles'
 import { proxyurl, ipApi, yelpApi, accessToken } from '../../config/yelp-config'
 
@@ -94,6 +95,7 @@ const ExperienceDiv = styled.div`
   animation: ${animateIn} .8s ease-in;
   &:hover {
     transform: scale(1.05);
+  }
 `
 
 const options = [
@@ -126,15 +128,13 @@ export default class Experiences extends React.Component {
   }
 
   getLocationFromIP() {
-    fetch(proxyurl + ipApi)
-      .then(res => res.json())
-      .then((out) => {
+    axios(proxyurl + ipApi)
+      .then(({ data }) => {
         this.setState({
-          latitude: out.geobyteslatitude,
-          longitude: out.geobyteslongitude,
-          city: out.geobytescity,
+          latitude: data.geobyteslatitude,
+          longitude: data.geobyteslongitude,
+          city: data.geobytescity,
         })
-        // console.log(this.state)
         // This function is used as callback, because we need coordinates before calling it.
         this.getYelpEntries(defaultCategory)
       })
@@ -142,21 +142,24 @@ export default class Experiences extends React.Component {
   }
 
   getYelpEntries(category) {
-    const requestParams = {
-      method: 'GET',
+    const { latitude, longitude } = this.state
+    axios({
+      method: 'get',
+      url: proxyurl + yelpApi,
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-    }
-
-    const querystring = `?latitude=${parseFloat(this.state.latitude)
-    }&longitude=${parseFloat(this.state.longitude)}&categories=${category},all&radius=5000`
-    fetch(proxyurl + yelpApi + querystring, requestParams).then(res => res.json())
-      .then((out) => {
-        // console.log(out)
+      params: {
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+        categories: `${category},all`,
+        radius: 5000,
+      },
+    })
+      .then(({ data }) => {
         this.setState({
-          experiences: out.businesses,
+          experiences: data.businesses,
           category: categories[category],
         })
       })
@@ -167,10 +170,14 @@ export default class Experiences extends React.Component {
     const experienceList = this.state.experiences.map((exp) => {
       const categoryLabels = exp.categories.map((category, i) => {
         if (i >= 2) return null
-        return (<ExperienceCategory>{category.title}</ExperienceCategory>)
+        return (
+          <ExperienceCategory key={category.title}>
+            {category.title}
+          </ExperienceCategory>
+        )
       })
       return (
-        <a href={exp.url} target='_blank' style={{ textDecoration: 'none' }}>
+        <a href={exp.url} target='_blank' style={{ textDecoration: 'none' }} key={exp.url}>
           <ExperienceDiv>
             <ExperiencePhoto backgroundImage={exp.image_url} />
             <ExperienceTitle>{exp.name}</ExperienceTitle>
