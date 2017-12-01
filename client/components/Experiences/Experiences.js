@@ -1,14 +1,9 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
+import StarRatings from 'react-star-ratings'
+import Dropdown from 'react-dropdown'
 import { colors, shadows } from '../../constants/styles'
-
-const proxyurl = 'https://cors-anywhere.herokuapp.com/'
-const ipApi = 'http://gd.geobytes.com/GetCityDetails'
-const yelpApi = 'https://api.yelp.com/v3/businesses/search'
-// const yelp_auth = 'https://api.yelp.com/oauth2/token'
-// const clientId = 'tNeGZND-6dRHCmE354aXLQ'
-// const clientSecret = 'tH5xe5c3STy2NNEBegkBX9GdaQfO7ulOqBX0txkiOU2yLWfLnJ5pqKRgA5AraFj6'
-const accessToken = 'SeysEKu-QwblCdF9nn5Ym1p4Zz7YLfIAbrL8jrUmWub36GO_TUrDVlqps9VRHIeeS4x1ax2zrMSvG64RN2yFtYtez7XAxce1DrPozuXFeAagrl5LT1sLss6sF-IcWnYx'
+import { proxyurl, ipApi, yelpApi, accessToken } from '../../config/yelp-config'
 
 const Wrapper = styled.section`
   padding: 4em;
@@ -17,8 +12,13 @@ const Wrapper = styled.section`
 
 const Title = styled.h1`
   font-size: 1.3em;
-  text-align: center;
+  color: ${colors.black};
+`
+
+const Selector = styled.h1`
+  font-size: 1.3em;
   color: ${colors.violetRed};
+  cursor: pointer;
 `
 
 const ExperiencesContainer = styled.div`
@@ -30,15 +30,58 @@ const ExperiencesContainer = styled.div`
   margin-top: 40px;
 `
 
+const ExperienceTitle = styled.h1`
+  font-size: 1em;
+  text-align: center;
+  margin: 10px 0px;
+  color: ${colors.black};
+`
+
+const ExperienceCategory = styled.button`
+  background: ${colors.violetRed};
+  color: ${colors.white};
+  font-size: .8em;
+  text-align: center;
+  height: 30px;
+  min-width: 40px;
+  margin: 0em .5em 0em .5em;
+  padding: 0.25em 1em;
+  border-radius: 15px;
+  border: solid 1px ${colors.violetRed};
+`
+
+const ExperienceCategoryContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1em;
+  margin-bottom: 1em;
+`
+
+const ExperiencePhoto = styled.div`
+  background: url(${props => props.backgroundImage});
+  width: 100%;
+  height: 200px;
+  background-size: cover
+  `
+
+const animateIn = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+}`
+
 const ExperienceDiv = styled.div`
-  border-radius: 2px;
+  border-radius: 10px;
   width: 250px;
-  height: 100px;
-  padding: 10px;
+  height: 330px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   text-align: center;
   overflow: hidden;
   margin: 10px;
@@ -48,30 +91,38 @@ const ExperienceDiv = styled.div`
   transition: all 200ms ease-in;
   position: relative;
   cursor: pointer;
+  animation: ${animateIn} .8s ease-in;
   &:hover {
     transform: scale(1.05);
 `
+
+const options = [
+  { value: 'active', label: 'Active Experiences' },
+  { value: 'tours', label: 'Tours' },
+  { value: 'food', label: 'Food' },
+  { value: 'galleries', label: 'Art' },
+]
+
+const categories = {
+  active: 'Active Experiences',
+  tours: 'Tours',
+  food: 'Food',
+  galleries: 'Art',
+}
+
+const defaultCategory = 'active'
 
 export default class Experiences extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      latitude: 34.0522,
-      longitude: -118.2437,
-      city: 'Los Angeles',
       experiences: [],
     }
     this.getLocationFromIP = this.getLocationFromIP.bind(this)
     this.getYelpEntries = this.getYelpEntries.bind(this)
-  }
-
-  componentWillMount() {
+    this.selectExperienceCategory = this.selectExperienceCategory.bind(this)
+    this.selectExperienceCategory = this.selectExperienceCategory.bind(this)
     this.getLocationFromIP()
-    this.getYelpEntries()
-  }
-
-  componentDidMount() {
-
   }
 
   getLocationFromIP() {
@@ -84,11 +135,13 @@ export default class Experiences extends React.Component {
           city: out.geobytescity,
         })
         // console.log(this.state)
+        // This function is used as callback, because we need coordinates before calling it.
+        this.getYelpEntries(defaultCategory)
       })
       .catch((err) => { throw err })
   }
 
-  getYelpEntries() {
+  getYelpEntries(category) {
     const requestParams = {
       method: 'GET',
       headers: {
@@ -98,12 +151,13 @@ export default class Experiences extends React.Component {
     }
 
     const querystring = `?latitude=${parseFloat(this.state.latitude)
-    }&longitude=${parseFloat(this.state.longitude)}&categories=active,all&radius=5000`
+    }&longitude=${parseFloat(this.state.longitude)}&categories=${category},all&radius=5000`
     fetch(proxyurl + yelpApi + querystring, requestParams).then(res => res.json())
       .then((out) => {
-        // console.log(out)
+        console.log(out)
         this.setState({
           experiences: out.businesses,
+          category: categories[category],
         })
       })
       .catch((err) => { throw err })
@@ -111,22 +165,48 @@ export default class Experiences extends React.Component {
 
   getExperiencesMarkup() {
     const experienceList = this.state.experiences.map((exp) => {
-      return (<ExperienceDiv>{exp.name}</ExperienceDiv>)
+      const categoryLabels = exp.categories.map((category, i) => {
+        if (i >= 2) return null
+        return (<ExperienceCategory>{category.title}</ExperienceCategory>)
+      })
+      return (
+        <a href={exp.url} target='_blank' style={{ textDecoration: 'none' }}>
+          <ExperienceDiv>
+            <ExperiencePhoto backgroundImage={exp.image_url} />
+            <ExperienceTitle>{exp.name}</ExperienceTitle>
+            <StarRatings
+              rating={exp.rating}
+              isSelectable={false}
+              isAggregateRating
+              numOfStars={5}
+              starRatedColor={'orange'}
+              starWidthAndHeight={'15px'}
+            />
+            <ExperienceCategoryContainer>{categoryLabels}</ExperienceCategoryContainer>
+          </ExperienceDiv>
+        </a>)
     })
     return experienceList
   }
 
   getLocationMarkup() {
-    return (<Title>Experiences near your current location,&nbsp;
+    return (<Title>
+      near your current location,&nbsp;
       {this.state.city}&nbsp;({this.state.latitude}, {this.state.longitude})
             </Title>)
   }
+
+  selectExperienceCategory(option) {
+    this.getYelpEntries(option.value)
+  }
+
 
   render() {
     const experiencesMarkup = this.getExperiencesMarkup()
     const locationMarkup = this.getLocationMarkup()
     return (
       <Wrapper>
+        <Selector><i><Dropdown options={options} onChange={this.selectExperienceCategory} value={this.state.category} placeholder='Select an experience category' /></i></Selector>
         {locationMarkup}
         <ExperiencesContainer>{experiencesMarkup}</ExperiencesContainer>
       </Wrapper>
