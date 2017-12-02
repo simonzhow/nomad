@@ -4,7 +4,9 @@ import PropTypes from 'prop-types'
 import mapMarkerIcon from '../static/img/map-marker.png'
 import { shadows } from '../constants/styles'
 
-const calculateBorderWidth = (imageSize) => (imageSize * 0.05)
+const MapMarkerWrapper = styled.div`
+  position: relative;
+`
 
 const MapPhotoWrapper = styled.div`
   cursor: pointer;
@@ -14,7 +16,7 @@ const MapPhotoWrapper = styled.div`
   width: ${props => props.size}px;
   height: ${props => props.size}px;
   border-radius: 1px;
-  border: ${props => calculateBorderWidth(props.size)}px solid white;
+  border: ${props => props.size * 0.05}px solid white;
   transition: all 0.3s ease;
   transform: translate(-50%, -50%);
   &:hover {
@@ -30,33 +32,44 @@ const MapMarkerImage = styled.img`
   cursor: pointer;
 `
 
-export default function MapMarker(props) {
-  const { images, onClick, size } = props
-  if (images && Array.isArray(images) && images.length > 0) {
+export default class MapMarker extends React.Component {
+
+  static propTypes = {
+    images: PropTypes.array,
+    onClick: PropTypes.func,
+    size: PropTypes.number,
+  }
+
+  static defaultProps = {
+    size: 120,
+  }
+
+  constructor(props) {
+    super(props)
+    this.handleMarkerClick = this.handleMarkerClick.bind(this)
+  }
+
+  handleMarkerClick() {
+    this.props.onClick()
+    this.setState({ tooltipOpen: !this.state.tooltipOpen })
+  }
+
+  render() {
+    const { images, size } = this.props
+
     return (
-      <MapPhotoWrapper
-        onClick={onClick}
-        src={images[0]}
-        size={size}
-      />
-    )
-  } else {
-    return (
-      <MapMarkerImage
-        src={mapMarkerIcon}
-      />
+      <MapMarkerWrapper onClick={this.handleMarkerClick}>
+        {
+          (images && Array.isArray(images) && images.length > 0) ?
+            <MapPhotoWrapper
+              src={images[0]}
+              size={size}
+            /> :
+            <MapMarkerImage
+              src={mapMarkerIcon}
+            />
+        }
+      </MapMarkerWrapper>
     )
   }
-}
-
-MapMarker.propTypes = {
-  name: PropTypes.string,
-  images: PropTypes.array,
-  onClick: PropTypes.func,
-  size: PropTypes.number,
-}
-
-MapMarker.defaultProps = {
-  name: 'Some image',
-  size: 120,
 }

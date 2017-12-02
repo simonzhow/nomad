@@ -172,7 +172,6 @@ export default class LocationSelector extends React.Component {
                   <MapMarker
                     lat={mapCenter.lat}
                     lng={mapCenter.lng}
-                    name={'x'}
                   />
               }
             </GoogleMapReact>

@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import AddEntryButton from './AddEntryButton'
 import AddEntryModal from './AddEntryModal'
 import MapMarker from './MapMarker'
+import MapMarkerDetailedView from './MapMarkerDetailedView'
 import GMAP_CONFIG, { ZOOM_LEVELS } from '../config/google-maps'
 import travelEntries from '../dummy-data/travel-entries'
 
@@ -52,11 +53,13 @@ export default class Map extends React.Component {
       addEntryModalOpen: false,
       mapCenter: null,
       mapZoom: null,
+      selectedEntry: null,
     }
     this.toggleAddEntryModal = this.toggleAddEntryModal.bind(this)
     this.zoomToMarker = this.zoomToMarker.bind(this)
     this.handleMapBoundsChange = this.handleMapBoundsChange.bind(this)
     this.handleOutsideClick = this.handleOutsideClick.bind(this)
+    this.handleEntryClick = this.handleEntryClick.bind(this)
   }
 
   componentDidMount() {
@@ -87,8 +90,13 @@ export default class Map extends React.Component {
     this.setState({ mapCenter: center, mapZoom: zoom })
   }
 
+  handleEntryClick(entry) {
+    this.setState({ selectedEntry: entry })
+    this.zoomToMarker(entry.location.lat, entry.location.lng)
+  }
+
   handleOutsideClick(event) {
-    if (this.addEntryModal) {
+    if (this.state.addEntryModalOpen && this.addEntryModal) {
       // NOTE: Can't use Node.contains() for this functionality because
       // Places autocomplete option divs disappear before they can be read
       // by this function so it would give false positive outside clicks
@@ -109,18 +117,19 @@ export default class Map extends React.Component {
       return (
         <MapMarker
           key={name}
-          name={name}
           lat={location.lat}
           lng={location.lng}
           images={images}
           size={this.calculateImageSize()}
-          onClick={this.zoomToMarker.bind(this, location.lat, location.lng)}
+          onClick={this.handleEntryClick.bind(this, entry)}
         />
       )
     })
   }
 
   render() {
+    const { selectedEntry } = this.state
+
     return (
       <MapWrapper>
         <GoogleMapReactWrapper blur={this.state.addEntryModalOpen}>
@@ -153,6 +162,8 @@ export default class Map extends React.Component {
               />
             </AddEntryModalWrapper>
         }
+
+        {selectedEntry && <MapMarkerDetailedView entry={selectedEntry} />}
       </MapWrapper>
     )
   }
