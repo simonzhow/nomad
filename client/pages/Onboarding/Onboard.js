@@ -1,4 +1,4 @@
-import React, { Component }from 'react'
+import React, { Component } from 'react'
 import styled from 'styled-components'
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 import Script from 'react-load-script'
@@ -30,22 +30,14 @@ const Title = styled.h1`
   font-size: 1.5em;
   text-align: center;
   color: white;
-`;
+`
 
-const googleMapsApi = 'https://maps.googleapis.com/maps/api/js?key='+GMAP_CONFIG.bootstrapURLKeys.key+'&libraries=places';
-
-const AutocompleteItem = ({ formattedSuggestion }) => (
-  <div>
-    <strong>{ formattedSuggestion.mainText }</strong>{' '}
-    <small>{ formattedSuggestion.secondaryText }</small>
-  </div>
-)
+const googleMapsApi = `https://maps.googleapis.com/maps/api/js?key=${GMAP_CONFIG.bootstrapURLKeys.key}&libraries=places`
 
 export default class OnboardPage extends Component {
   constructor(props) {
     super(props)
     this.state = { searchQuery: '', scriptLoaded: false }
-    this.onChange = (address) => this.setState({ address })
     this.handleSearchChange = (searchQuery) => {
       this.setState({ searchQuery })
     }
@@ -63,34 +55,44 @@ export default class OnboardPage extends Component {
     // Use Google Places API to try to get the coordinates from the search query
     geocodeByAddress(searchQuery)
       .then(results => getLatLng(results[0]))
-      .then(coordinates => {
-        if (coordinates && coordinates.lat && coordinates.lng) {
-          document.location.href = '/map';
-          this.setState({ coordinates })
-        }
+      .then(() => {
+        // if (coordinates && coordinates.lat && coordinates.lng) {
+        document.location.href = '/map'
+        // this.setState({ coordinates })
+        // }
       })
       .catch(error => console.log('Error', error))
   }
-  render () {
+  render() {
     const placesAutocompleteProps = {
       value: this.state.searchQuery,
       onChange: this.handleSearchChange,
       placeholder: 'Search for a location...',
     }
 
-    let placesDropdown = '';
+    const AutocompleteItem = ({ formattedSuggestion }) => (
+      <div>
+        <strong>{formattedSuggestion.mainText}</strong>{' '}
+        <small>{formattedSuggestion.secondaryText}</small>
+      </div>
+    )
+
+    let placesDropdown = ''
     if (this.state.scriptLoaded) {
-      placesDropdown = <PlacesDropdown>
+      placesDropdown = (
+        <PlacesDropdown>
           <PlacesAutocomplete
             inputProps={placesAutocompleteProps}
             onSelect={this.handlePlaceSelection}
             autocompleteItem={AutocompleteItem}
           />
         </PlacesDropdown>
+      )
     }
     return (
       <OnboardDiv>
-        <Script url={googleMapsApi}
+        <Script
+          url={googleMapsApi}
           onLoad={this.handleScriptLoad.bind(this)}
         />
         <Title>WHERE IS HOME?</Title>
