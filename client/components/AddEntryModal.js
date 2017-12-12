@@ -5,6 +5,9 @@ import { colors } from '../constants/styles'
 import Button from './Button'
 import LocationSelector from './LocationSelector'
 import ImageChooser from './ImageChooser'
+import {
+  createTravelEntry,
+} from '../helpers/api'
 
 const growIn = keyframes`
   from { transform: scale(0); opacity: 0; }
@@ -155,13 +158,24 @@ export default class AddEntryModal extends React.Component {
   }
 
   submit() {
-    // const { name, description, photo, coordinates } = this.state
-    // const isReadyToSubmit = Boolean(
-    //   name && description && ((photo && photo.coordinates) || coordinates)
-    // )
-    // if (isReadyToSubmit) {
-    //
-    // }
+    const { name, description, photo, coordinates } = this.state
+    const coordinatesToUse = (photo && photo.coordinates) || coordinates
+    const isReadyToSubmit = Boolean(name && description && coordinatesToUse)
+
+    if (isReadyToSubmit) {
+      createTravelEntry({
+        title: name,
+        user_id: 'test-user',
+        location: {
+          latitude: coordinatesToUse.lat,
+          longitude: coordinatesToUse.lon,
+        },
+      })
+        .then(res => {
+          // eslint-disable-next-line no-console
+          console.log(res)
+        })
+    }
   }
 
   render() {
