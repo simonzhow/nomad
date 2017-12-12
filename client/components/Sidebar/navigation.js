@@ -45,7 +45,7 @@ export default function Navigation() {
       <StyledNavLink to='/map'>My Adventures</StyledNavLink>
       <StyledNavLink to='/leaderboard'>Leaderboard</StyledNavLink>
       <StyledNavLink to='/experiences'>Find Experiences</StyledNavLink>
-      <StyledNavLink to='/'>My Friends</StyledNavLink>
+      <StyledNavLink to='/friends'>My Friends</StyledNavLink>
     </NavigationDiv>
 
   )

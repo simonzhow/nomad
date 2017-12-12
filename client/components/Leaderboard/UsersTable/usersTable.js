@@ -1,24 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styles from 'styled-components'
+import styled from 'styled-components'
 
 import UsersTableRow from './usersTableRow'
 
 const NORMAL_OFFSET = 4
-const UsersTableDiv = styles.div`
+const UsersTableDiv = styled.div`
   margin-top: 30px;
 `
 
-const UsersTableTable = styles.table`
+const UsersTableTable = styled.table`
   width: 100%;
   border-collapse: collapse;
 `
 
-const UsersTableHeaderRow = styles.tr`
+const UsersTableHeaderRow = styled.tr`
 
 `
 
-const UsersTableHeaderElem = styles.th`
+const UsersTableHeaderElem = styled.th`
   border: 1px solid #dddddd;
   text-align: left;
   padding-left: 8px;
