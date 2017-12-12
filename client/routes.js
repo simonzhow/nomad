@@ -4,8 +4,9 @@ import { Route, IndexRoute } from 'react-router'
 import App from './modules/App/App'
 import SidebarFrame from './components/SidebarFrame'
 import LandingPage from './pages/LandingPage'
-import Leaderboard from './components/Leaderboard'
+import Leaderboard from './components/Leaderboard/Leaderboard'
 import Map from './components/Map'
+import Friends from './components/Friends'
 import Experiences from './components/Experiences/Experiences'
 import Onboard from './pages/Onboarding'
 
@@ -35,6 +36,7 @@ export default (
       <Route path='/leaderboard' component={Leaderboard} />
       <Route path='/map' component={Map} />
       <Route path='/experiences' component={Experiences} />
+      <Route path='/friends' component={Friends} />
     </Route>
     <Route path='/onboard' component={Onboard} />
   </Route>
