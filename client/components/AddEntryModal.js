@@ -148,7 +148,6 @@ class AddEntryModal extends React.Component {
       title && description && ((photo && photo.coordinates) || coordinates)
     )
     if (this.props.accessToken && isReadyToSubmit) {
-      console.log('making post')
       axios({
         method: 'post',
         url: ADD_TRAVEL_ENTRY,
@@ -166,8 +165,12 @@ class AddEntryModal extends React.Component {
           },
         },
       })
-        .then(res => {
-          console.log('got response: ', res)
+        .then(() => {
+          this.props.onSuccess()
+        })
+        .catch(err => {
+          // eslint-disable-next-line no-console
+          console.log(err)
         })
     }
   }
@@ -234,6 +237,7 @@ class AddEntryModal extends React.Component {
 
 AddEntryModal.propTypes = {
   accessToken: PropTypes.string,
+  onSuccess: PropTypes.func,
 }
 
 const mapStateToProps = (state) => ({

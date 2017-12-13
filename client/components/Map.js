@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import GoogleMapReact from 'google-map-react'
 import styled from 'styled-components'
 import AddEntryButton from './AddEntryButton'
@@ -6,6 +8,7 @@ import AddEntryModal from './AddEntryModal'
 import MapPhoto from './MapPhoto'
 import MapMarker from './MapMarker'
 import GMAP_CONFIG from '../config/google-maps'
+import * as actions from '../actions'
 
 import travelEntries from '../dummy-data/travel-entries'
 
@@ -41,18 +44,23 @@ const AddEntryModalWrapper = styled.div`
   transform: translate(-50%, -50%);
 `
 
-export default class Map extends React.Component {
-
+class Map extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       addEntryModalOpen: false,
     }
     this.toggleAddEntryModal = this.toggleAddEntryModal.bind(this)
+    this.handleAddEntrySuccess = this.handleAddEntrySuccess.bind(this)
   }
 
   toggleAddEntryModal() {
     this.setState({ addEntryModalOpen: !this.state.addEntryModalOpen })
+  }
+
+  handleAddEntrySuccess() {
+    this.setState({ addEntryModalOpen: false })
+    this.getUserAsync()
   }
 
   renderTravelEntries() {
@@ -102,10 +110,21 @@ export default class Map extends React.Component {
         {
           this.state.addEntryModalOpen &&
             <AddEntryModalWrapper>
-              <AddEntryModal />
+              <AddEntryModal onSuccess={this.handleAddEntrySuccess} />
             </AddEntryModalWrapper>
         }
       </MapWrapper>
     )
   }
 }
+
+Map.propTypes = {
+  user: PropTypes.object,
+  getUserAsync: PropTypes.func,
+}
+
+const mapStateToProps = (state) => ({
+  user: state.user,
+})
+
+export default connect(mapStateToProps, actions)(Map)
