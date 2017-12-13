@@ -1,14 +1,14 @@
-import { Router } from 'express'
+const router = require('express').router()
 import * as TravelEntryController from '../controllers/travel_entry.controller'
-const router = new Router()
+const fbAuth = passport.authenticate('facebook-token', { session: false })
 
 // Get all travel entries of a user
-router.route('/:user_id').get(TravelEntryController.getTravelEntries)
+router.get('/:user_id', fbAuth, TravelEntryController.getTravelEntries)
 
 // Create a new travel entry
-router.route('/').post(TravelEntryController.createTravelEntry)
+router.post('/', fbAuth, TravelEntryController.createTravelEntry)
 
 // Delete a travel entry by ID
-router.route('/:travel_id').delete(TravelEntryController.deleteTravelEntry)
+router.delete('/:travel_id', fbAuth, TravelEntryController.deleteTravelEntry)
 
 export default router

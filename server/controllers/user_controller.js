@@ -5,29 +5,13 @@ import bcrypt from 'bcrypt'
 const saltRounds = 10
 
 /**
-  Gets a user using email address
+  Finds or creates a user
   @param req
   @param res
   @returns void
   */
 export function getUser(req, res) {
-  if (req.body.user.email_address) {
-    User.findOne({ email_address: req.body.user.email_address }).exec((err, user) => {
-      if (err) {
-        res.status(500).send(err)
-      }
-      res.json({ user })
-    })
-  }
-  if (req.body.user.user_id) {
-    User.findOne({ user_id: req.body.user.user_id }).exec((err, user) => {
-      if (err) {
-        res.status(500).send(err)
-        return
-      }
-      res.json({ user })
-    })
-  }
+  res.json({ req.user })
 }
 
 /**
