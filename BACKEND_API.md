@@ -4,7 +4,7 @@
 
 ```javascript
 GET /api/travelentries/:user_id => getTravelEntries
-req.params = {
+req.body = {
 	user_id: some_id
 }
 if error:

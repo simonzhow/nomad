@@ -1,10 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import axios from 'axios'
 import styled, { keyframes } from 'styled-components'
 import { colors } from '../constants/styles'
+
 import Button from './Button'
 import LocationSelector from './LocationSelector'
 import ImageChooser from './ImageChooser'
+import { ADD_TRAVEL_ENTRY } from '../constants/api-endpoints'
 
 const growIn = keyframes`
   from { transform: scale(0); opacity: 0; }
@@ -113,7 +117,7 @@ FormItem.propTypes = {
 
 const LOCATION_FROM_PHOTO_MESSAGE = 'We\'ll try our best to grab the location data from a photo if you provide one!'
 
-export default class AddEntryModal extends React.Component {
+class AddEntryModal extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -128,6 +132,7 @@ export default class AddEntryModal extends React.Component {
     this.handleDescriptionChange = (evt) => { this.setState({ description: evt.target.value }) }
     this.handleNewPhoto = (photo) => { this.setState({ photo }) }
     this.handleNewCoordinates = (coordinates) => { this.setState({ coordinates }) }
+    this.submit = this.submit.bind(this)
   }
 
   isReadyToSubmit() {
@@ -135,6 +140,36 @@ export default class AddEntryModal extends React.Component {
     return Boolean(
       name && description && ((photo && photo.coordinates) || coordinates)
     )
+  }
+
+  submit() {
+    const { name: title, description, photo, coordinates } = this.state
+    const isReadyToSubmit = Boolean(
+      title && description && ((photo && photo.coordinates) || coordinates)
+    )
+    if (this.props.accessToken && isReadyToSubmit) {
+      console.log('making post')
+      axios({
+        method: 'post',
+        url: ADD_TRAVEL_ENTRY,
+        headers: {
+          Authorization: `Bearer ${this.props.accessToken}`,
+        },
+        data: {
+          travelEntry: {
+            title,
+            description,
+            location: {
+              latitude: coordinates.lat,
+              longitude: coordinates.lng,
+            },
+          },
+        },
+      })
+        .then(res => {
+          console.log('got response: ', res)
+        })
+    }
   }
 
   render() {
@@ -184,7 +219,10 @@ export default class AddEntryModal extends React.Component {
             </FormColumn>
           </ColumnsWrapper>
 
-          <Button disabled={!this.isReadyToSubmit()}>
+          <Button
+            disabled={!this.isReadyToSubmit()}
+            onClick={this.submit}
+          >
             Submit
           </Button>
 
@@ -193,3 +231,13 @@ export default class AddEntryModal extends React.Component {
     )
   }
 }
+
+AddEntryModal.propTypes = {
+  accessToken: PropTypes.string,
+}
+
+const mapStateToProps = (state) => ({
+  accessToken: state.auth.accessToken,
+})
+
+export default connect(mapStateToProps, {})(AddEntryModal)

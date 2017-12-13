@@ -3,10 +3,7 @@ import {
   UPDATE_AUTH_ACTION,
   UPDATE_USER_ACTION,
 } from './types'
-
-export const API_ENDPOINTS = {
-  GET_CURRENT_USER: '/api/users',
-}
+import { GET_CURRENT_USER } from '../constants/api-endpoints'
 
 export const updateAuth = (accessToken) => ({
   type: UPDATE_AUTH_ACTION,
@@ -24,7 +21,7 @@ export const getUserAsync = (onSuccess) => (
   (dispatch, getState) => {
     return axios({
       method: 'get',
-      url: API_ENDPOINTS.GET_CURRENT_USER,
+      url: GET_CURRENT_USER,
       headers: {
         Authorization: `Bearer ${getState().auth.accessToken}`,
       },
