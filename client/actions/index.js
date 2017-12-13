@@ -32,6 +32,7 @@ export const getUserAsync = (onSuccess) => (
       dispatch(updateUser(response.data.user))
       if (typeof onSuccess === 'function') { onSuccess(response.data.user) }
     }).catch(err => {
+      // eslint-disable-next-line no-console
       console.log(err)
     })
   }

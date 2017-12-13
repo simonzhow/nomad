@@ -6,6 +6,7 @@ import User from '../user'
 import Guid from 'guid'
 import { connectDB, dropDB } from '../../util/test-helpers'
 
+// eslint-disable-next-line max-len
 const user = new User({ user_id: Guid.create(), first_name: 'Uma', last_name: 'Lakshminarayan', email_address: 'umaslakshmi@ucla.edu', username: 'umasl', points: 0, password: 'some_hash' })
 
 /**

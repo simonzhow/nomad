@@ -16,10 +16,12 @@ module.exports = () => {
         UserHelpers
           .createNewUser(profile)
           .then(newUser => done(null, newUser))
-          .catch(error => console.log('error', `Error when creating new user: ${error}`))
+          .catch(error => {
+            // eslint-disable-next-line no-console
+            console.log('error', `Error when creating new user: ${error}`)
+          })
       }
     })
   }
-  console.log('config.fb:', config.fb)
   passport.use(new FacebookTokenStrategy(config.fb, authProcessor))
 }
