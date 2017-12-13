@@ -1,8 +1,9 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import UserPhoto from './userPhoto'
-import UserName from './userName'
 import Navigation from './navigation'
 
 import sidebarimage from '../../static/img/sidebar.png'
@@ -21,16 +22,39 @@ const SidebarContainer = styled.div`
   min-height: 680px;
 `
 
+const UserName = styled.div`
+  margin-top: 5px;
+  margin-bottom: 5px;
+  text-align: center;
+  font-size: 30px;
+  color: white;
+`
 
-export default function Sidebar() {
+const formatName = (name) => (name ? `${name.first} ${name.last}` : '')
+
+function Sidebar(props) {
   return (
     <SidebarDiv>
       <SidebarContainer>
-        <UserPhoto />
-        <UserName />
+        <UserPhoto src={props.profilePic} />
+        <UserName>{formatName(props.name)}</UserName>
         <Navigation />
       </SidebarContainer>
     </SidebarDiv>
-
   )
 }
+
+Sidebar.propTypes = {
+  name: PropTypes.object.isRequired,
+  profilePic: PropTypes.string,
+}
+
+const mapStateToProps = (state) => ({
+  name: {
+    first: state.user.first_name,
+    last: state.user.last_name,
+  },
+  profilePic: state.user.profile_pic,
+})
+
+export default connect(mapStateToProps, {})(Sidebar)
