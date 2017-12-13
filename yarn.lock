@@ -2,10 +2,6 @@
 # yarn lockfile v1
 
 
-"@google/maps@^0.4.5":
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/@google/maps/-/maps-0.4.5.tgz#72eb9cf8e7de944619245d0f8f3f969571ea84d8"
-
 "@tonybadguy/call-me-maybe@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@tonybadguy/call-me-maybe/-/call-me-maybe-2.0.1.tgz#233267eb0a1625c2f5954f27af364b4a29c6e344"

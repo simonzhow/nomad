@@ -8,7 +8,7 @@ const travelEntrySchema = new Schema({
   description: { type: String, required: true },
   location: { type: Schema.Types.ObjectId, ref: 'Location', required: true },
   photo_url: { type: String },
-  // points: { type: Number, required: true },
+  points: { type: Number, required: true },
 })
 
 export default mongoose.model('TravelEntry', travelEntrySchema)
