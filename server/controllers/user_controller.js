@@ -11,7 +11,7 @@ const saltRounds = 10
   @returns void
   */
 export function getUser(req, res) {
-  res.json({ req.user })
+  res.json({ user: req.user })
 }
 
 /**

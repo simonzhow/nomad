@@ -18,7 +18,7 @@ const authenticationReducer = (state = DEFAULT_AUTHENTICATION_STATE, action) => 
       }
       return { isLoggedIn: false, accessToken: null }
     default:
-      return { isLoggedIn: false, accessToken: null }
+      return state
   }
 }
 

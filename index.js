@@ -1,7 +1,8 @@
 /**
  * Entry Script
  */
-
+require('dotenv').config()
+console.log('process.env:', process.env.FACEBOOK_APP_ID)
 if (process.env.NODE_ENV === 'production') {
   process.env.webpackAssets = JSON.stringify(require('./dist/client/manifest.json'))
   process.env.webpackChunkAssets = JSON.stringify(require('./dist/client/chunk-manifest.json'))

@@ -1,3 +1,3 @@
-module.exports = {
-	require('./facebook-token.js')()
+module.exports = () => {
+  require('./facebook-token')()
 }

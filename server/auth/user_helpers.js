@@ -2,12 +2,11 @@ import User from '../models/user'
 
 const createNewUser = profile => {
   return new Promise((resolve, reject) => {
-    let newUser = new User({
+    const newUser = new User({
       user_id: profile.id,
       first_name: profile.name.givenName,
       last_name: profile.name.familyName,
-      points = 0,
-      has_onboarded: false,
+      points: 0,
     })
 
     newUser.save(error => {
@@ -21,5 +20,5 @@ const createNewUser = profile => {
 }
 
 module.exports = {
-  createNewUser
+  createNewUser,
 }
