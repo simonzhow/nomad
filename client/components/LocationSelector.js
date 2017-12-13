@@ -106,8 +106,8 @@ export default class LocationSelector extends React.Component {
       .then(results => getLatLng(results[0]))
       .then(coordinates => {
         if (coordinates && coordinates.lat && coordinates.lng) {
-          this.setState({ coordinates })
-          this.props.onNewCoordinates(coordinates)
+          // this.setState({ coordinates })
+          // this.props.onNewCoordinates(coordinates)
         }
       })
       .catch(error => {
@@ -175,7 +175,6 @@ export default class LocationSelector extends React.Component {
                   <MapMarker
                     lat={mapCenter.lat}
                     lng={mapCenter.lng}
-                    name={'x'}
                   />
               }
             </GoogleMapReact>

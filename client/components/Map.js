@@ -3,11 +3,15 @@ import GoogleMapReact from 'google-map-react'
 import styled from 'styled-components'
 import AddEntryButton from './AddEntryButton'
 import AddEntryModal from './AddEntryModal'
-import MapPhoto from './MapPhoto'
 import MapMarker from './MapMarker'
-import GMAP_CONFIG from '../config/google-maps'
-
+import MapMarkerDetailedView from './MapMarkerDetailedView'
+import GMAP_CONFIG, { ZOOM_LEVELS } from '../config/google-maps'
 import travelEntries from '../dummy-data/travel-entries'
+
+const MAP_PHOTO_DIMS = {
+  MIN: { SIZE: 15, ZOOM: 3 }, // Image is 15x15 at zoom level <= 3
+  MAX: { SIZE: 120, ZOOM: 15 }, // Image is 120x120 at zoom level >= 15
+}
 
 const MapWrapper = styled.div`
   flex-grow: 1;
@@ -47,39 +51,85 @@ export default class Map extends React.Component {
     super(props)
     this.state = {
       addEntryModalOpen: false,
+      mapCenter: null,
+      mapZoom: null,
+      selectedEntry: null,
     }
     this.toggleAddEntryModal = this.toggleAddEntryModal.bind(this)
+    this.zoomToMarker = this.zoomToMarker.bind(this)
+    this.handleMapBoundsChange = this.handleMapBoundsChange.bind(this)
+    this.handleOutsideClick = this.handleOutsideClick.bind(this)
+    this.handleEntryClick = this.handleEntryClick.bind(this)
+  }
+
+  componentDidMount() {
+    document.addEventListener('mousedown', this.handleOutsideClick)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleOutsideClick)
   }
 
   toggleAddEntryModal() {
     this.setState({ addEntryModalOpen: !this.state.addEntryModalOpen })
   }
 
+  calculateImageSize() {
+    const { mapZoom } = this.state
+    const { MAX, MIN } = MAP_PHOTO_DIMS
+    const SIZE_RANGE = MAX.SIZE - MIN.SIZE
+    const ZOOM_RANGE = MAX.ZOOM - MIN.ZOOM
+    return MIN.SIZE + (((mapZoom - MIN.ZOOM) / ZOOM_RANGE) * SIZE_RANGE)
+  }
+
+  zoomToMarker(lat, lng) {
+    this.setState({ mapCenter: { lat, lng }, mapZoom: ZOOM_LEVELS.LOCAL })
+  }
+
+  handleMapBoundsChange({ center, zoom }) {
+    this.setState({ mapCenter: center, mapZoom: zoom })
+  }
+
+  handleEntryClick(entry) {
+    this.setState({ selectedEntry: entry })
+    this.zoomToMarker(entry.location.lat, entry.location.lng)
+  }
+
+  handleOutsideClick(event) {
+    if (this.state.addEntryModalOpen && this.addEntryModal) {
+      // NOTE: Can't use Node.contains() for this functionality because
+      // Places autocomplete option divs disappear before they can be read
+      // by this function so it would give false positive outside clicks
+      const { x, y, width, height } = this.addEntryModal.getBoundingClientRect()
+      const { clientX: clickX, clientY: clickY } = event
+      if (
+        clickX < x || clickX > x + width ||
+        clickY < y || clickY > y + height
+      ) {
+        this.setState({ addEntryModalOpen: false })
+      }
+    }
+  }
+
   renderTravelEntries() {
     return travelEntries.map(entry => {
-      if (entry.images && entry.images.length > 0) {
-        return (
-          <MapPhoto
-            key={entry.name}
-            name={entry.name}
-            lat={entry.location.latitude}
-            lng={entry.location.longitude}
-            image={entry.images[0]}
-          />
-        )
-      } else {
-        return (
-          <MapMarker
-            key={entry.name}
-            lat={entry.location.latitude}
-            lng={entry.location.longitude}
-          />
-        )
-      }
+      const { name, images, location } = entry
+      return (
+        <MapMarker
+          key={name}
+          lat={location.lat}
+          lng={location.lng}
+          images={images}
+          size={this.calculateImageSize()}
+          onClick={this.handleEntryClick.bind(this, entry)}
+        />
+      )
     })
   }
 
   render() {
+    const { selectedEntry } = this.state
+
     return (
       <MapWrapper>
         <GoogleMapReactWrapper blur={this.state.addEntryModalOpen}>
@@ -87,6 +137,9 @@ export default class Map extends React.Component {
             bootstrapURLKeys={GMAP_CONFIG.bootstrapURLKeys}
             defaultCenter={GMAP_CONFIG.defaultCenter}
             defaultZoom={GMAP_CONFIG.defaultZoom}
+            center={this.state.mapCenter}
+            zoom={this.state.mapZoom}
+            onChange={this.handleMapBoundsChange}
           >
             {this.renderTravelEntries()}
           </GoogleMapReact>
@@ -94,6 +147,7 @@ export default class Map extends React.Component {
 
         <MapToolsOverlay>
           <AddEntryButton
+            innerRef={div => { this.addEntryButton = div }}
             isOpen={this.state.addEntryModalOpen}
             onClick={this.toggleAddEntryModal}
           />
@@ -102,9 +156,14 @@ export default class Map extends React.Component {
         {
           this.state.addEntryModalOpen &&
             <AddEntryModalWrapper>
-              <AddEntryModal />
+              <AddEntryModal
+                innerRef={div => { this.addEntryModal = div }}
+                onSubmit={() => { this.setState({ addEntryModalOpen: false }) }}
+              />
             </AddEntryModalWrapper>
         }
+
+        {selectedEntry && <MapMarkerDetailedView entry={selectedEntry} />}
       </MapWrapper>
     )
   }

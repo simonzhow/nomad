@@ -5,6 +5,9 @@ import { colors } from '../constants/styles'
 import Button from './Button'
 import LocationSelector from './LocationSelector'
 import ImageChooser from './ImageChooser'
+import {
+  createTravelEntry,
+} from '../helpers/api'
 
 const growIn = keyframes`
   from { transform: scale(0); opacity: 0; }
@@ -52,6 +55,15 @@ const FormTitle = styled.div`
 const FormItemDiv = styled.div`
   margin-bottom: 10px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: ${props => { return props.grow ? 1 : 0 }};
+`
+
+const FormItemInnerDiv = styled.div`
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 `
 
 const FormLabel = styled.div`
@@ -82,7 +94,7 @@ const FormTextArea = styled.textarea`
   border-radius: 2px;
   border: 1px solid ${colors.lightGray};
   width: 100%;
-  height: 100px;
+  flex-grow: 1;
 `
 
 const FormNote = styled.p`
@@ -95,11 +107,11 @@ const FormNote = styled.p`
 
 const FormItem = (props) => {
   return (
-    <FormItemDiv innerRef={props.innerRef}>
+    <FormItemDiv innerRef={props.innerRef} grow={props.grow}>
       <FormLabel required={props.required}>{props.name}</FormLabel>
-      <div>
+      <FormItemInnerDiv>
         {props.children}
-      </div>
+      </FormItemInnerDiv>
     </FormItemDiv>
   )
 }
@@ -107,6 +119,7 @@ const FormItem = (props) => {
 FormItem.propTypes = {
   name: PropTypes.string.isRequired,
   required: PropTypes.bool,
+  grow: PropTypes.bool,
   children: PropTypes.node.isRequired,
   innerRef: PropTypes.func,
 }
@@ -114,6 +127,12 @@ FormItem.propTypes = {
 const LOCATION_FROM_PHOTO_MESSAGE = 'We\'ll try our best to grab the location data from a photo if you provide one!'
 
 export default class AddEntryModal extends React.Component {
+
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    innerRef: PropTypes.func,
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -128,6 +147,7 @@ export default class AddEntryModal extends React.Component {
     this.handleDescriptionChange = (evt) => { this.setState({ description: evt.target.value }) }
     this.handleNewPhoto = (photo) => { this.setState({ photo }) }
     this.handleNewCoordinates = (coordinates) => { this.setState({ coordinates }) }
+    this.submit = this.submit.bind(this)
   }
 
   isReadyToSubmit() {
@@ -137,11 +157,32 @@ export default class AddEntryModal extends React.Component {
     )
   }
 
+  submit() {
+    const { name, description, photo, coordinates } = this.state
+    const coordinatesToUse = (photo && photo.coordinates) || coordinates
+    const isReadyToSubmit = Boolean(name && description && coordinatesToUse)
+
+    if (isReadyToSubmit) {
+      createTravelEntry({
+        title: name,
+        user_id: 'test-user',
+        location: {
+          latitude: coordinatesToUse.lat,
+          longitude: coordinatesToUse.lon,
+        },
+      })
+        .then(res => {
+          // eslint-disable-next-line no-console
+          console.log(res)
+        })
+    }
+  }
+
   render() {
     const { photo } = this.state
 
     return (
-      <AddEntryModalWrapper>
+      <AddEntryModalWrapper innerRef={this.props.innerRef}>
         <FormTitle>Add a Travel Entry</FormTitle>
 
         <StyledForm>
@@ -157,7 +198,7 @@ export default class AddEntryModal extends React.Component {
                 />
               </FormItem>
 
-              <FormItem name='Description' required>
+              <FormItem name='Description' required grow>
                 <FormTextArea
                   onChange={this.handleDescriptionChange}
                   name='name'
@@ -184,7 +225,10 @@ export default class AddEntryModal extends React.Component {
             </FormColumn>
           </ColumnsWrapper>
 
-          <Button disabled={!this.isReadyToSubmit()}>
+          <Button
+            disabled={!this.isReadyToSubmit()}
+            onClick={this.submit}
+          >
             Submit
           </Button>
 

@@ -26,6 +26,7 @@ const AddEntryButtonDiv = styled.div`
 export default function AddEntryButton(props) {
   return (
     <AddEntryButtonDiv
+      innerRef={props.innerRef}
       isOpen={props.isOpen}
       onClick={props.onClick}
     >
@@ -37,4 +38,5 @@ export default function AddEntryButton(props) {
 AddEntryButton.propTypes = {
   isOpen: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
+  innerRef: PropTypes.func,
 }
