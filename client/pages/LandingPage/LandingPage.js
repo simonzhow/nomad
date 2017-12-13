@@ -1,6 +1,12 @@
-import React, { Component } from 'react'
+/* global FB */
 
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import styled, { keyframes } from 'styled-components'
 import styles from './LandingPage.css'
+import * as actions from '../../actions'
+import { colors } from '../../constants/styles'
 import logo from '../../static/img/nomad_logo.png'
 
 const silhouette = [
@@ -15,13 +21,72 @@ const silhouette = [
   require('../../static/img/silhouette9.jpg'),
 ]
 
-export class LandingPage extends Component {
+const ButtonBase = styled.div`
+  margin-top: 1em;
+  padding: .8em 1.2em .8em 1.2em;
+  border-radius: 1.5em;
+  border-width: 4px;
+  border-style: solid;
+  font-size: 18px;
+  letter-spacing: 1px;
+  cursor: pointer;
+`
+
+const SignUpButton = ButtonBase.extend`
+  color: ${colors.green};
+  background-color: ${colors.white};
+  border-color: ${colors.green};
+`
+
+const LoginButton = ButtonBase.extend`
+  color: ${colors.white};
+  background-color: ${colors.green};
+`
+
+const SplashContainer = styled.div`
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  vertical-align: middle;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: black;
+`
+
+const changeImage = keyframes`
+	0% {opacity: 0;}
+	10% {opacity: 1;}
+	90% {opacity: 1;}
+	100% {opacity: 0;}
+`
+
+const SplashCard = styled.div`
+  height: 100%;
+  width: 33%;
+  flex-grow: 1;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  vertical-align: middle;
+  justify-content: center;
+  align-items: center;
+  animation: ${changeImage} 4s infinite;
+  background-image: url(${props => props.image});
+  background-size: cover;
+`
+
+export class LandingPage extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
       imgcount: 0,
     }
+    this.handleLoginClick = this.handleLoginClick.bind(this)
   }
 
   componentDidMount() {
@@ -34,10 +99,26 @@ export class LandingPage extends Component {
     clearInterval(this.interval)
   }
 
-  getBackgroundStyle(offset) {
-    return {
-      backgroundImage: `url(${silhouette[offset + this.state.imgcount]})`,
-      backgroundSize: 'cover',
+  handleLoginClick() {
+    const onLoginComplete = () => {
+      this.props.getUserAsync((user) => {
+        if (user.hasOnboarded) {
+          this.props.history.replace('/map')
+        } else {
+          this.props.history.replace('/map')
+        }
+      })
+    }
+
+    if (this.props.isLoggedIn) {
+      onLoginComplete()
+    } else {
+      FB.login((res) => {
+        if (res.status === 'connected') {
+          this.props.updateAuth(res.authResponse.accessToken)
+          onLoginComplete()
+        }
+      })
     }
   }
 
@@ -46,16 +127,30 @@ export class LandingPage extends Component {
       <div className={styles.container}>
         <div className={styles.landingCenterContent}>
           <img alt='logo' src={logo} />
-          <a href='/onboard'><div className={styles.landingButton}>Join the community</div></a>
+          <a href='/onboard'>
+            <SignUpButton>Join the community</SignUpButton>
+          </a>
+          <LoginButton onClick={this.handleLoginClick}>Log In</LoginButton>
         </div>
-        <div className={styles.splashContainer}>
-          <div className={styles.splashcard} style={this.getBackgroundStyle(0)}></div>
-          <div className={styles.splashcard} style={this.getBackgroundStyle(3)}></div>
-          <div className={styles.splashcard} style={this.getBackgroundStyle(6)}></div>
-        </div>
+        <SplashContainer>
+          <SplashCard image={silhouette[0 + this.state.imgcount]} />
+          <SplashCard image={silhouette[3 + this.state.imgcount]} />
+          <SplashCard image={silhouette[6 + this.state.imgcount]} />
+        </SplashContainer>
       </div>
       )
   }
 }
 
-export default LandingPage
+LandingPage.propTypes = {
+  isLoggedIn: PropTypes.bool,
+  updateAuth: PropTypes.func,
+  getUserAsync: PropTypes.func,
+  history: PropTypes.object,
+}
+
+const mapStateToProps = (state) => ({
+  isLoggedIn: state.auth.isLoggedIn,
+})
+
+export default connect(mapStateToProps, actions)(LandingPage)

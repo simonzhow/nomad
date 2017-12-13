@@ -110,7 +110,10 @@ export default class LocationSelector extends React.Component {
           this.props.onNewCoordinates(coordinates)
         }
       })
-      .catch(error => console.log('Error', error))
+      .catch(error => {
+        // eslint-disable-next-line no-console
+        console.log('Error', error)
+      })
   }
 
   handleModeChange(newModeId) {

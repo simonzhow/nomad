@@ -3,33 +3,6 @@
 	width: 100%;
 }
 
-.splashContainer {
-	width: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	display: flex;
-	flex-direction: row;
-	vertical-align: middle;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-	background-color: black;
-}
-
-.splashcard{
-	height: 100%;
-	width: 33%;
-	flex-grow: 1;
-	background-color: black;
-	display: flex;
-	flex-direction: column;
-	vertical-align: middle;
-	justify-content: center;
-	align-items: center;
-	animation: changeImage 4s infinite;
-}
-
 .landingCenterContent {
 	position: absolute;
 	top: 40vh;

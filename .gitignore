@@ -10,3 +10,4 @@ coverage/
 .nyc_output/
 notes.txt
 package-lock.json
+.env

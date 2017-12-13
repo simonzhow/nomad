@@ -61,7 +61,10 @@ export default class OnboardPage extends Component {
         // this.setState({ coordinates })
         // }
       })
-      .catch(error => console.log('Error', error))
+      .catch(error => {
+        // eslint-disable-next-line no-console
+        console.log('Error', error)
+      })
   }
   render() {
     const placesAutocompleteProps = {

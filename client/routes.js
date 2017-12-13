@@ -9,6 +9,7 @@ import Map from './components/Map'
 import Friends from './components/Friends'
 import Experiences from './components/Experiences/Experiences'
 import Onboard from './pages/Onboarding'
+import requireAuth from './components/require-auth'
 
 // require.ensure polyfill for node
 if (typeof require.ensure !== 'function') {
@@ -30,13 +31,13 @@ if (process.env.NODE_ENV !== 'production') {
 export default (
   <Route path='/' component={App}>
     <IndexRoute component={LandingPage} />
-    <Route path='/' component={SidebarFrame}>
+    <Route path='/' component={requireAuth(SidebarFrame)}>
       {/* TODO: Set up proper index route (404 page) */}
       <IndexRoute component={Leaderboard} />
-      <Route path='/leaderboard' component={Leaderboard} />
-      <Route path='/map' component={Map} />
-      <Route path='/experiences' component={Experiences} />
-      <Route path='/friends' component={Friends} />
+      <Route path='/leaderboard' component={requireAuth(Leaderboard)} />
+      <Route path='/map' component={requireAuth(Map)} />
+      <Route path='/experiences' component={requireAuth(Experiences)} />
+      <Route path='/friends' component={requireAuth(Friends)} />
     </Route>
     <Route path='/onboard' component={Onboard} />
   </Route>
