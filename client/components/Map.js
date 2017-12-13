@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import GoogleMapReact from 'google-map-react'
 import styled from 'styled-components'
 import AddEntryButton from './AddEntryButton'
@@ -6,6 +8,8 @@ import AddEntryModal from './AddEntryModal'
 import MapMarker from './MapMarker'
 import MapMarkerDetailedView from './MapMarkerDetailedView'
 import GMAP_CONFIG, { ZOOM_LEVELS } from '../config/google-maps'
+import * as actions from '../actions'
+
 import travelEntries from '../dummy-data/travel-entries'
 
 const MAP_PHOTO_DIMS = {
@@ -45,8 +49,7 @@ const AddEntryModalWrapper = styled.div`
   transform: translate(-50%, -50%);
 `
 
-export default class Map extends React.Component {
-
+class Map extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -60,6 +63,7 @@ export default class Map extends React.Component {
     this.handleMapBoundsChange = this.handleMapBoundsChange.bind(this)
     this.handleOutsideClick = this.handleOutsideClick.bind(this)
     this.handleEntryClick = this.handleEntryClick.bind(this)
+    this.handleAddEntrySuccess = this.handleAddEntrySuccess.bind(this)
   }
 
   componentDidMount() {
@@ -109,6 +113,10 @@ export default class Map extends React.Component {
         this.setState({ addEntryModalOpen: false })
       }
     }
+
+  handleAddEntrySuccess() {
+    this.setState({ addEntryModalOpen: false })
+    this.getUserAsync()
   }
 
   renderTravelEntries() {
@@ -168,3 +176,14 @@ export default class Map extends React.Component {
     )
   }
 }
+
+Map.propTypes = {
+  user: PropTypes.object,
+  getUserAsync: PropTypes.func,
+}
+
+const mapStateToProps = (state) => ({
+  user: state.user,
+})
+
+export default connect(mapStateToProps, actions)(Map)

@@ -1,13 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import axios from 'axios'
 import styled, { keyframes } from 'styled-components'
 import { colors } from '../constants/styles'
+
 import Button from './Button'
 import LocationSelector from './LocationSelector'
 import ImageChooser from './ImageChooser'
-import {
-  createTravelEntry,
-} from '../helpers/api'
+import { ADD_TRAVEL_ENTRY } from '../constants/api-endpoints'
 
 const growIn = keyframes`
   from { transform: scale(0); opacity: 0; }
@@ -126,13 +127,7 @@ FormItem.propTypes = {
 
 const LOCATION_FROM_PHOTO_MESSAGE = 'We\'ll try our best to grab the location data from a photo if you provide one!'
 
-export default class AddEntryModal extends React.Component {
-
-  static propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-    innerRef: PropTypes.func,
-  }
-
+class AddEntryModal extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -158,22 +153,34 @@ export default class AddEntryModal extends React.Component {
   }
 
   submit() {
-    const { name, description, photo, coordinates } = this.state
-    const coordinatesToUse = (photo && photo.coordinates) || coordinates
-    const isReadyToSubmit = Boolean(name && description && coordinatesToUse)
-
-    if (isReadyToSubmit) {
-      createTravelEntry({
-        title: name,
-        user_id: 'test-user',
-        location: {
-          latitude: coordinatesToUse.lat,
-          longitude: coordinatesToUse.lon,
+    const { name: title, description, photo, coordinates } = this.state
+    const isReadyToSubmit = Boolean(
+      title && description && ((photo && photo.coordinates) || coordinates)
+    )
+    if (this.props.accessToken && isReadyToSubmit) {
+      axios({
+        method: 'post',
+        url: ADD_TRAVEL_ENTRY,
+        headers: {
+          Authorization: `Bearer ${this.props.accessToken}`,
+        },
+        data: {
+          travelEntry: {
+            title,
+            description,
+            location: {
+              latitude: coordinates.lat,
+              longitude: coordinates.lng,
+            },
+          },
         },
       })
-        .then(res => {
+        .then(() => {
+          this.props.onSuccess()
+        })
+        .catch(err => {
           // eslint-disable-next-line no-console
-          console.log(res)
+          console.log(err)
         })
     }
   }
@@ -237,3 +244,14 @@ export default class AddEntryModal extends React.Component {
     )
   }
 }
+
+AddEntryModal.propTypes = {
+  accessToken: PropTypes.string,
+  onSuccess: PropTypes.func,
+}
+
+const mapStateToProps = (state) => ({
+  accessToken: state.auth.accessToken,
+})
+
+export default connect(mapStateToProps, {})(AddEntryModal)

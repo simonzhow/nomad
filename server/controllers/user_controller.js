@@ -1,4 +1,5 @@
 import User from '../models/user'
+import TravelEntry from '../models/travelentry'
 import sanitizeHtml from 'sanitize-html'
 import Guid from 'guid'
 import bcrypt from 'bcrypt'
@@ -11,7 +12,14 @@ const saltRounds = 10
   @returns void
   */
 export function getUser(req, res) {
-  res.json({ user: req.user })
+  // BIBEK: I think we should attach the user's travel entries along with the user object
+  // so they don't have to make another request
+  TravelEntry.find({ user_id: req.user.user_id }).exec((err, travelEntries) => {
+    if (err) {
+      res.status(500).send(err); return
+    }
+    res.json({ user: Object.assign({}, req.user._doc, { travelEntries }) })
+  })
 }
 
 /**

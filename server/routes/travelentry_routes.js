@@ -6,7 +6,7 @@ const travelEntryRouter = new Router()
 const fbAuth = passport.authenticate('facebook-token', { session: false })
 
 // Get all travel entries of a user
-travelEntryRouter.get('/:user_id', fbAuth, TravelEntryController.getTravelEntries)
+travelEntryRouter.get('/', fbAuth, TravelEntryController.getTravelEntries)
 
 // Create a new travel entry
 travelEntryRouter.post('/', fbAuth, TravelEntryController.createTravelEntry)
