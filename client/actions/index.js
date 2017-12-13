@@ -29,8 +29,8 @@ export const getUserAsync = (onSuccess) => (
         Authorization: `Bearer ${getState().auth.accessToken}`,
       },
     }).then(response => {
-      if (typeof onSuccess === 'function') { onSuccess(response.data.user) }
       dispatch(updateUser(response.data.user))
+      if (typeof onSuccess === 'function') { onSuccess(response.data.user) }
     }).catch(err => {
       console.log(err)
     })

@@ -105,7 +105,7 @@ export class LandingPage extends React.Component {
         if (user.hasOnboarded) {
           this.props.history.replace('/map')
         } else {
-          this.props.history.replace('/onboard')
+          this.props.history.replace('/map')
         }
       })
     }
