@@ -1,14 +1,8 @@
-import { Router } from 'express'
+const router = require('express').router()
 import * as UserController from '../controllers/user_controller'
-const router = new Router()
+const fbAuth = passport.authenticate('facebook-token', { session: false })
 
 // Get a user
-router.route('/').get(UserController.getUser)
-
-// Create a user
-router.route('/').post(UserController.createUser)
-
-// Delete a user by user_id
-router.route('/:user_id').delete(UserController.deleteUser)
+router.get('/', fbAuth, UserController.getUser)
 
 export default router

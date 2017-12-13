@@ -5,6 +5,7 @@ import bodyParser from 'body-parser'
 import path from 'path'
 import cors from 'cors'
 import IntlWrapper from '../client/modules/Intl/IntlWrapper'
+require('dotenv').config()
 
 // Webpack Requirements
 import webpack from 'webpack'
@@ -38,6 +39,7 @@ import users from './routes/user_routes'
 import travelEntries from './routes/travelentry_routes'
 import dummyData from './dummyData'
 import serverConfig from './config'
+const auth = require('./auth')
 
 // Set native promises as mongoose promise
 mongoose.Promise = global.Promise
@@ -59,6 +61,8 @@ app.use(cors())
 app.use(bodyParser.json({ limit: '20mb' }))
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }))
 app.use(Express.static(path.resolve(__dirname, '../dist/client')))
+app.use(passport.initialize())
+app.use(passport.session())
 app.use('/api/posts', posts)
 app.use('/api/users', users)
 app.use('/api/travelentries', travelEntries)
