@@ -18,7 +18,7 @@ const Title = styled.h1`
 
 const Selector = styled.h1`
   font-size: 1.3em;
-  color: ${colors.violetRed};
+  color: ${colors.green};
   cursor: pointer;
 `
 
@@ -39,7 +39,7 @@ const ExperienceTitle = styled.h1`
 `
 
 const ExperienceCategory = styled.button`
-  background: ${colors.violetRed};
+  background: ${colors.green};
   color: ${colors.white};
   font-size: .8em;
   text-align: center;
@@ -48,7 +48,7 @@ const ExperienceCategory = styled.button`
   margin: 0em .5em 0em .5em;
   padding: 0.25em 1em;
   border-radius: 15px;
-  border: solid 1px ${colors.violetRed};
+  border: solid 1px ${colors.green};
 `
 
 const ExperienceCategoryContainer = styled.div`

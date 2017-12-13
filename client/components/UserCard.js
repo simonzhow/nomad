@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { colors } from '../constants/styles'
 
 // Temp static element
 import temp from './Sidebar/images/bibek-ghimire.jpg'
@@ -30,7 +31,7 @@ const UserCardPhotoDiv = styled.div`
 const UserCardPhoto = styled.img`
   overflow: hidden;
   margin: auto;
-  background-color: white;
+  background-color: ${colors.white};
   height: 200px;
   width: 200px;
 `
@@ -49,17 +50,17 @@ const UserCardButtonDiv = styled.div`
 const UserCardButton = styled.button`
   padding: 10px 20px 10px 20px;
   background-color: white;
-  color: #83D3B0;
+  color: ${colors.green};
   border-radius: 15px;
   cursor: pointer;
-  border-color: #83D3B0;
+  border-color: ${colors.green};
   font-size: 14px;
   &:focus {
     outline: 0;
   }
   &:hover {
-    background-color: #83D3B0;
-    color: white;
+    background-color: ${colors.green};
+    color: ${colors.white};
   }
 `
 

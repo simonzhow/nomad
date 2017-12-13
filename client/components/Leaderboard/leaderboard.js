@@ -7,7 +7,7 @@ import users from '../../static/MembersData'
 
 const LeaderboardDiv = styled.div`
   padding: 30px;
-  overflow: visible;
+  overflow: auto;
   transition: margin-left 0.125s ease-in-out;
 `
 
