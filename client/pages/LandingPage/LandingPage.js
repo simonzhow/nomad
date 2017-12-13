@@ -90,7 +90,6 @@ export class LandingPage extends React.Component {
   }
 
   componentDidMount() {
-    this.checkIfLoggedIn()
     this.interval = setInterval(() => this.setState({
       time: Date.now(), imgcount: this.state.imgcount === 2 ? 0 : this.state.imgcount + 1,
     }), 4000)
@@ -100,20 +99,24 @@ export class LandingPage extends React.Component {
     clearInterval(this.interval)
   }
 
-  checkIfLoggedIn() {
-    if (this.props.isLoggedIn) {
-      this.props.history.replace('/map')
-    }
-  }
-
   handleLoginClick() {
+    const onLoginComplete = () => {
+      this.props.getUserAsync((user) => {
+        if (user.hasOnboarded) {
+          this.props.history.replace('/map')
+        } else {
+          this.props.history.replace('/onboard')
+        }
+      })
+    }
+
     if (this.props.isLoggedIn) {
-      this.props.history.replace('/map')
+      onLoginComplete()
     } else {
       FB.login((res) => {
         if (res.status === 'connected') {
           this.props.updateAuth(res.authResponse.accessToken)
-          this.props.history.replace('/map')
+          onLoginComplete()
         }
       })
     }
@@ -142,11 +145,12 @@ export class LandingPage extends React.Component {
 LandingPage.propTypes = {
   isLoggedIn: PropTypes.bool,
   updateAuth: PropTypes.func,
+  getUserAsync: PropTypes.func,
   history: PropTypes.object,
 }
 
 const mapStateToProps = (state) => ({
-  isLoggedIn: state.authentication.isLoggedIn,
+  isLoggedIn: state.auth.isLoggedIn,
 })
 
 export default connect(mapStateToProps, actions)(LandingPage)

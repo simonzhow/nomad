@@ -7,9 +7,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Provider, connect } from 'react-redux'
 import { Router, browserHistory } from 'react-router'
-import * as actions from 'actions'
-
-// Import Routes
+import * as actions from './actions'
+import * as fbSDK from './util/fb-sdk'
 import routes from './routes'
 
 // Base stylesheet
@@ -18,29 +17,15 @@ require('./main.css')
 class App extends React.Component {
   constructor(props) {
     super(props)
-    window.fbAsyncInit = () => {
-      FB.init({
-        appId: '499768263743636',
-        autoLogAppEvents: true,
-        xfbml: true,
-        version: 'v2.11',
-      })
+    // Initialize the FB SDK; on complete, update auth status in Redux store
+    fbSDK.initialize(() => {
       FB.getLoginStatus(res => {
         if (res.status === 'connected') {
           this.props.updateAuth(res.authResponse.accessToken)
+          this.props.getUserAsync()
         }
-      })
-    }
-
-   /* eslint-disable */
-   (function(d, s, id){
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {return;}
-      js = d.createElement(s); js.id = id;
-      js.src = "https://connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode && fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-    /* eslint-enable */
+      }, true)
+    })
   }
 
   render() {
@@ -57,6 +42,7 @@ class App extends React.Component {
 App.propTypes = {
   store: PropTypes.object.isRequired,
   updateAuth: PropTypes.func,
+  getUserAsync: PropTypes.func,
 }
 
 export default connect(() => ({}), actions)(App)

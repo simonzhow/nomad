@@ -35,7 +35,7 @@ const requireAuth = (ComposedComponent) => {
   }
 
   const mapStateToProps = (state) => ({
-    isLoggedIn: state.authentication.isLoggedIn,
+    isLoggedIn: state.auth.isLoggedIn,
   })
 
   return connect(mapStateToProps, actions)(withRouter(Wrapper))
