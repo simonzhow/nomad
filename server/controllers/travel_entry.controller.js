@@ -32,7 +32,7 @@ export function calculatePoints(home, location, photoPresent) {
     { latitude: home.latitude, longitude: home.longitude }
   )
   const diameterOfEarth = 12742000
-  let totalPoints = (distance / diatmeterOfEarth) * distance
+  let totalPoints = (distance / diameterOfEarth) * distance
   // Incentive users to add photos
   if (photoPresent) {
     console.log('Photo is Present')

@@ -51,10 +51,10 @@ Sidebar.propTypes = {
 
 const mapStateToProps = (state) => ({
   name: {
-    first: state.user.first_name,
-    last: state.user.last_name,
+    first: state.user ? state.user.first_name : '',
+    last: state.user ? state.user.last_name : '',
   },
-  profilePic: state.user.profile_pic,
+  profilePic: state.user ? state.user.profile_pic : '',
 })
 
 export default connect(mapStateToProps, {})(Sidebar)
