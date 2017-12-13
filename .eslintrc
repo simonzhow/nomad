@@ -32,6 +32,7 @@
      "react/jsx-no-bind": [0],
      "semi": ["error", "never"],
      "react/jsx-filename-extension": 0,
-     "react/jsx-curly-brace-presence": 0
+     "react/jsx-curly-brace-presence": 0,
+     "camelcase": 0,
   }
 }

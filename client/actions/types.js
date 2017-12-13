@@ -1,0 +1,1 @@
+export const UPDATE_AUTH_ACTION = 'UPDATE_AUTH_ACTION'

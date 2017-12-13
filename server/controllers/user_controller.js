@@ -34,10 +34,12 @@ export function createUser(req, res) {
   if (!first_name || !last_name
     || !email_address || !username
     || !password || !confirm_password) {
-    return res.status(403).end()
+    res.status(403).end()
+    return
   }
   if (password !== confirm_password) {
-    return res.status(403).end()
+    res.status(403).end()
+    return
   }
 
   const newUser = new User()
@@ -52,14 +54,16 @@ export function createUser(req, res) {
 
   bcrypt.hash(password, saltRounds, (err, hash) => {
     if (err) {
-      return res.status(500).send(err)
+      res.status(500).send(err)
+      return
     }
 
     newUser.password = hash
 
     newUser.save((error, saved) => {
       if (error) {
-        return res.status(500).send(error)
+        res.status(500).send(error)
+        return
       }
 
       res.json({ saved })
@@ -76,7 +80,8 @@ export function createUser(req, res) {
 export function deleteUser(req, res) {
   User.findOne({ user_id: req.params.user_id }).exec((err, user) => {
     if (err) {
-      return res.status(500).send(err)
+      res.status(500).send(err)
+      return
     }
 
     user.remove(() => {

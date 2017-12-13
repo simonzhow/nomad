@@ -70,6 +70,3 @@ export function deleteTravelEntry(req, res) {
     })
   })
 }
-export function calculatePoints(req, res) {
-  //
-}
