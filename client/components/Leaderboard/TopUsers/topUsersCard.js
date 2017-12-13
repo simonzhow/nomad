@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styles from 'styled-components'
+import styled from 'styled-components'
 
 import TopUsersCardName from './topUsersCardName'
 import TopUsersCardInfo from './topUsersCardInfo'
 
-const TopUsersCardDiv = styles.div`
+const TopUsersCardDiv = styled.div`
   border-radius: 2px;
   width: 200px;
   overflow: hidden;

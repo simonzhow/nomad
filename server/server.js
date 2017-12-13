@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import path from 'path'
 import cors from 'cors'
+import passport from 'passport'
 import IntlWrapper from '../client/modules/Intl/IntlWrapper'
 
 // Webpack Requirements
@@ -34,8 +35,11 @@ import Helmet from 'react-helmet'
 import routes from '../client/routes'
 import { fetchComponentData } from './util/fetchData'
 import posts from './routes/post.routes'
+import users from './routes/user_routes'
+import travelEntries from './routes/travelentry_routes'
 import dummyData from './dummyData'
 import serverConfig from './config'
+require('./auth')()
 
 // Set native promises as mongoose promise
 mongoose.Promise = global.Promise
@@ -57,7 +61,11 @@ app.use(cors())
 app.use(bodyParser.json({ limit: '20mb' }))
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }))
 app.use(Express.static(path.resolve(__dirname, '../dist/client')))
-app.use('/api', posts)
+app.use(passport.initialize())
+app.use(passport.session())
+app.use('/api/posts', posts)
+app.use('/api/users', users)
+app.use('/api/travelentries', travelEntries)
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {

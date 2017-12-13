@@ -1,7 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
-
-import photo from './images/bibek-ghimire.jpg'
 
 const UserPhotoDiv = styled.div`
   padding-top: 60px;
@@ -18,10 +17,14 @@ const UserPhotoImg = styled.img`
   width: 200px;
 `
 
-export default function UserPhoto() {
+export default function UserPhoto(props) {
   return (
     <UserPhotoDiv>
-      <UserPhotoImg src={photo} />
+      <UserPhotoImg src={props.src} />
     </UserPhotoDiv>
   )
+}
+
+UserPhoto.propTypes = {
+  src: PropTypes.string.isRequired,
 }

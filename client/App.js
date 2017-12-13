@@ -1,29 +1,48 @@
+/* global FB */
+
 /**
  * Root Component
  */
 import React from 'react'
-import { Provider } from 'react-redux'
+import PropTypes from 'prop-types'
+import { Provider, connect } from 'react-redux'
 import { Router, browserHistory } from 'react-router'
-import IntlWrapper from './modules/Intl/IntlWrapper'
-
-// Import Routes
+import * as actions from './actions'
+import * as fbSDK from './util/fb-sdk'
 import routes from './routes'
 
 // Base stylesheet
 require('./main.css')
 
-export default function App(props) {
-  return (
-    <Provider store={props.store}>
-      <IntlWrapper>
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    // Initialize the FB SDK; on complete, update auth status in Redux store
+    fbSDK.initialize(() => {
+      FB.getLoginStatus(res => {
+        if (res.status === 'connected') {
+          this.props.updateAuth(res.authResponse.accessToken)
+          this.props.getUserAsync()
+        }
+      }, true)
+    })
+  }
+
+  render() {
+    return (
+      <Provider store={this.props.store}>
         <Router history={browserHistory}>
           {routes}
         </Router>
-      </IntlWrapper>
-    </Provider>
-  )
+      </Provider>
+    )
+  }
 }
 
 App.propTypes = {
-  store: React.PropTypes.object.isRequired,
+  store: PropTypes.object.isRequired,
+  updateAuth: PropTypes.func,
+  getUserAsync: PropTypes.func,
 }
+
+export default connect(() => ({}), actions)(App)

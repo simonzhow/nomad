@@ -1,0 +1,1 @@
+web: cross-env NODE_ENV=production webpack --config webpack.config.server.js node index.js
