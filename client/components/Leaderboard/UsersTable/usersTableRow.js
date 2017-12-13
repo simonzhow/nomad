@@ -1,13 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styles from 'styled-components'
+import { colors } from '../../../constants/styles'
 
 const UserTableRow = styles.tr`
 
 `
 
 const UserTableElem = styles.td`
-  border: 1px solid #dddddd;
+  border: 1px solid ${colors.lightGray};
   text-align: left;
   padding: 8px;
   position: relative;
