@@ -7,6 +7,7 @@ const createNewUser = profile => {
       first_name: profile.name.givenName,
       last_name: profile.name.familyName,
       points: 0,
+      profile_pic: profile.photos[0].value,
     })
 
     newUser.save(error => {
