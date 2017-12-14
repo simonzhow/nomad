@@ -35,6 +35,7 @@ export function onboard(req, res) {
       res.status(500).send(error)
       return
     } else {
+      saved.travelEntries = []
       res.json({ user: saved })
     }
   })
