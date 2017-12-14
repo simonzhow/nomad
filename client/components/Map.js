@@ -138,12 +138,12 @@ class Map extends React.Component {
   render() {
     const { selectedEntry } = this.state
 
-    return (
+    return (this.props.user ?
       <MapWrapper>
         <GoogleMapReactWrapper blur={this.state.addEntryModalOpen}>
           <GoogleMapReact
             bootstrapURLKeys={GMAP_CONFIG.bootstrapURLKeys}
-            defaultCenter={GMAP_CONFIG.defaultCenter}
+            defaultCenter={this.props.user.home}
             defaultZoom={GMAP_CONFIG.defaultZoom}
             center={this.state.mapCenter}
             zoom={this.state.mapZoom}
@@ -172,7 +172,7 @@ class Map extends React.Component {
         }
 
         {selectedEntry && <MapMarkerDetailedView entry={selectedEntry} />}
-      </MapWrapper>
+      </MapWrapper> : null
     )
   }
 }
