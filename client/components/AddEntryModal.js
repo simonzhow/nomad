@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 import styled, { keyframes } from 'styled-components'
 import { colors } from '../constants/styles'
-
+import Spinner from './Spinner'
 import Button from './Button'
 import LocationSelector from './LocationSelector'
 import ImageChooser from './ImageChooser'
@@ -135,6 +135,7 @@ class AddEntryModal extends React.Component {
       description: '',
       photo: null,
       coordinates: null,
+      submitting: false,
     }
 
     this.photoUploadInput = null
@@ -167,6 +168,7 @@ class AddEntryModal extends React.Component {
     formData.append('description', description)
     formData.append('location', JSON.stringify(location))
     if (this.props.accessToken && this.isReadyToSubmit()) {
+      this.setState({ submitting: true })
       axios({
         method: 'post',
         url: ADD_TRAVEL_ENTRY,
@@ -232,12 +234,16 @@ class AddEntryModal extends React.Component {
             </FormColumn>
           </ColumnsWrapper>
 
-          <Button
-            disabled={!this.isReadyToSubmit()}
-            onClick={this.submit}
-          >
-            Submit
-          </Button>
+          {
+            this.state.submitting ?
+              <Spinner /> :
+              <Button
+                disabled={!this.isReadyToSubmit()}
+                onClick={this.submit}
+              >
+                Submit
+              </Button>
+          }
 
         </StyledForm>
       </AddEntryModalWrapper>

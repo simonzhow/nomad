@@ -11,3 +11,4 @@ coverage/
 notes.txt
 package-lock.json
 .env
+files/
