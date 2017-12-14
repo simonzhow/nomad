@@ -94,20 +94,106 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         
             
-<h4 class="name" id="attachPhotoUrl"><span class="type-signature">(constant) </span>attachPhotoUrl<span class="type-signature"></span></h4>
 
+    
+
+    
+    <h4 class="name" id="attachPhotoUrl"><span class="type-signature"></span>attachPhotoUrl<span class="signature">(req, res)</span><span class="type-signature"></span></h4>
+    
+
+    
 
 
 
 <div class="description">
-    <<<<<<< HEAD
-Handles uploading to Cloudinary
+    Express middleware that attaches a Cloudinary url to req.body if req.file
+is present
 </div>
 
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Express Request object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Express Response object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -143,7 +229,7 @@ Handles uploading to Cloudinary
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util_file-helpers.js.html">util/file-helpers.js</a>, <a href="util_file-helpers.js.html#line14">line 14</a>
+        <a href="util_file-helpers.js.html">util/file-helpers.js</a>, <a href="util_file-helpers.js.html#line10">line 10</a>
     </li></ul></dd>
     
 
@@ -159,11 +245,222 @@ Handles uploading to Cloudinary
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
         
+            
+
     
 
     
-        <h3 class="subsection-title">Methods</h3>
+    <h4 class="name" id="authProcessor"><span class="type-signature"></span>authProcessor<span class="signature">(accessToken, refreshToken, profile, done)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Finds a user (or creates one if necessary) in our DB corresponding to the
+  provided FB profile and passes it to the done callback
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>accessToken</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Client's FB-provided access token</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>refreshToken</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Client's FB-provided refresh token</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>profile</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">FB profile object that contains a 'id' property we store in our DB</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#passportStrategyDoneCallback">passportStrategyDoneCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Callback that PassportJS requires to continue middleware execution</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="auth_facebook-token.js.html">auth/facebook-token.js</a>, <a href="auth_facebook-token.js.html#line20">line 20</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         
             
@@ -349,6 +646,209 @@ Handles uploading to Cloudinary
 </div>
 
 
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createNewUser"><span class="type-signature"></span>createNewUser<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates a new user in the DB corresponding to the provided FB profile
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>profile.id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">User's Facebook profile id</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>profile.name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">User's name as an object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>profile.photos</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">User's Facebook photos</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="auth_user_helpers.js.html">auth/user_helpers.js</a>, <a href="auth_user_helpers.js.html#line10">line 10</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Promise represents the status of saving the new user to the DB
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
 
     
 
@@ -1466,6 +1966,164 @@ Handles uploading to Cloudinary
     
 
     
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+
+    
+
+    
+    <h4 class="name" id="passportStrategyDoneCallback"><span class="type-signature"></span>passportStrategyDoneCallback<span class="signature">(error, user)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Error</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Error object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>user</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">DB user object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="auth_facebook-token.js.html">auth/facebook-token.js</a>, <a href="auth_facebook-token.js.html#line7">line 7</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+    
 
     
 </article>
@@ -1478,13 +2136,13 @@ Handles uploading to Cloudinary
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="experienceSchema.html">experienceSchema</a></li><li><a href="travelEntrySchema.html">travelEntrySchema</a></li><li><a href="userSchema.html">userSchema</a></li></ul><h3>Global</h3><ul><li><a href="global.html#attachPhotoUrl">attachPhotoUrl</a></li><li><a href="global.html#calculatePoints">calculatePoints</a></li><li><a href="global.html#createTravelEntry">createTravelEntry</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#deleteTravelEntry">deleteTravelEntry</a></li><li><a href="global.html#deleteUser">deleteUser</a></li><li><a href="global.html#getTravelEntries">getTravelEntries</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#onboard">onboard</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="experienceSchema.html">experienceSchema</a></li><li><a href="travelEntrySchema.html">travelEntrySchema</a></li><li><a href="userSchema.html">userSchema</a></li></ul><h3>Global</h3><ul><li><a href="global.html#attachPhotoUrl">attachPhotoUrl</a></li><li><a href="global.html#authProcessor">authProcessor</a></li><li><a href="global.html#calculatePoints">calculatePoints</a></li><li><a href="global.html#createNewUser">createNewUser</a></li><li><a href="global.html#createTravelEntry">createTravelEntry</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#deleteTravelEntry">deleteTravelEntry</a></li><li><a href="global.html#deleteUser">deleteUser</a></li><li><a href="global.html#getTravelEntries">getTravelEntries</a></li><li><a href="global.html#getUser">getUser</a></li><li><a href="global.html#onboard">onboard</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Dec 14 2017 12:52:43 GMT-0800 (PST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Dec 14 2017 13:28:03 GMT-0800 (PST)
 </footer>
 
 <script> prettyPrint(); </script>
