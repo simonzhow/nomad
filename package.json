@@ -75,6 +75,7 @@
     "redux": "^3.7.2",
     "redux-thunk": "^2.1.0",
     "sanitize-html": "^1.11.4",
+    "selenium-webdriver": "^3.6.0",
     "styled-components": "^2.2.3",
     "yelp-fusion": "^1.0.4"
   },
