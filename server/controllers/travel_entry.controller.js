@@ -6,9 +6,9 @@ import async from 'async'
 import { calculatePoints } from '../util/travel-entry-helpers'
 
 /**
-  Gets all travel entries
-  @param req
-  @param res
+  Gets all travel entries for the user making the request
+  @param {Object} req - Express Request object
+  @param {Object} res - Express Response object
   @returns void
   */
 export function getTravelEntries(req, res) {
@@ -22,9 +22,10 @@ export function getTravelEntries(req, res) {
 }
 
 /**
-  Creates a travel entry for the user corresponding to the provided access token
-  @param req
-  @param res
+  Creates a travel entry for the user making the request using entry info
+  provided onr req.body; req.body.location is provided as serialized JSON
+  @param {Object} req - Express Request object
+  @param {Object} res - Express Response object
   @returns void
   */
 export function createTravelEntry(req, res) {
@@ -36,11 +37,11 @@ export function createTravelEntry(req, res) {
   }
   const newTravelEntry = new TravelEntry()
   newTravelEntry.title = sanitizeHtml(title)
+  newTravelEntry.description = sanitizeHtml(description)
+  newTravelEntry.photo_url = photoUrl || null
   newTravelEntry.location = location
   newTravelEntry.user_id = req.user.user_id
   newTravelEntry.travel_id = Guid.create()
-  newTravelEntry.description = sanitizeHtml(description)
-  newTravelEntry.photo_url = photoUrl || null
 
   async.waterfall([
     function (cb) {
@@ -57,7 +58,7 @@ export function createTravelEntry(req, res) {
       })
     },
     function (cb) {
-      // Save the travel entry being created right now
+      // Save the travel entry
       newTravelEntry.save((newTravelEntryErr, saved) => {
         if (newTravelEntryErr) { cb(newTravelEntryErr) }
         res.json({ saved })
@@ -70,17 +71,17 @@ export function createTravelEntry(req, res) {
 }
 
 /**
-  Deletes the specified travel entry if the corresonding user owns it
-  @param req
-  @param res
+  Deletes the specified travel entry if the requesting user owns it
+  @param {Object} req - Express Request object
+  @param {Object} res - Express Response object
   @returns void
   */
 export function deleteTravelEntry(req, res) {
   TravelEntry.findOne({ travel_id: req.params.travel_id }).exec((err, travelentry) => {
     if (err) {
       res.status(500).send(err)
+      return
     }
-
     travelentry.remove(() => {
       res.status(200).end()
     })
