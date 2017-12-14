@@ -1,9 +1,15 @@
-import React, { Component } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import styled from 'styled-components'
+import axios from 'axios'
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 import Script from 'react-load-script'
 import bg from '../../static/img/onboard_bg.jpg'
 import GMAP_CONFIG from '../../config/google-maps'
+import { COMPLETE_ONBOARDING } from '../../constants/api-endpoints'
+import * as actions from '../../actions'
 
 const OnboardDiv = styled.div`
   width: 100%;
@@ -34,7 +40,7 @@ const Title = styled.h1`
 
 const googleMapsApi = `https://maps.googleapis.com/maps/api/js?key=${GMAP_CONFIG.bootstrapURLKeys.key}&libraries=places`
 
-export default class OnboardPage extends Component {
+class OnboardPage extends React.Component {
   constructor(props) {
     super(props)
     this.state = { searchQuery: '', scriptLoaded: false }
@@ -43,6 +49,20 @@ export default class OnboardPage extends Component {
     }
     this.handlePlaceSelection = this.handlePlaceSelection.bind(this)
     this.handleScriptLoad = this.handleScriptLoad.bind(this)
+  }
+
+  componentDidMount() {
+    this.catchAlreadyOnboardedUsers()
+  }
+
+  componentDidUpdate() {
+    this.catchAlreadyOnboardedUsers()
+  }
+
+  catchAlreadyOnboardedUsers() {
+    if (this.props.user && this.props.user.home) {
+      this.props.history.replace('/map')
+    }
   }
 
   handleScriptLoad() {
@@ -55,11 +75,24 @@ export default class OnboardPage extends Component {
     // Use Google Places API to try to get the coordinates from the search query
     geocodeByAddress(searchQuery)
       .then(results => getLatLng(results[0]))
-      .then(() => {
-        // if (coordinates && coordinates.lat && coordinates.lng) {
-        document.location.href = '/map'
-        // this.setState({ coordinates })
-        // }
+      .then((res) => {
+        axios({
+          method: 'post',
+          url: COMPLETE_ONBOARDING,
+          headers: {
+            Authorization: `Bearer ${this.props.accessToken}`,
+          },
+          data: {
+            home: { lat: res.lat, lng: res.lng },
+          },
+        })
+          .then((postRes) => {
+            this.props.updateUser(postRes.data.user)
+          })
+          .catch(err => {
+            // eslint-disable-next-line
+            console.log(err)
+          })
       })
       .catch(error => {
         // eslint-disable-next-line no-console
@@ -92,7 +125,7 @@ export default class OnboardPage extends Component {
         </PlacesDropdown>
       )
     }
-    return (
+    return (this.props.user && !this.props.user.home &&
       <OnboardDiv>
         <Script
           url={googleMapsApi}
@@ -104,3 +137,17 @@ export default class OnboardPage extends Component {
     )
   }
 }
+
+OnboardPage.propTypes = {
+  accessToken: PropTypes.string,
+  updateUser: PropTypes.func,
+  user: PropTypes.object,
+  history: PropTypes.object,
+}
+
+const mapStateToProps = (state) => ({
+  user: state.user,
+  accessToken: state.auth.accessToken,
+})
+
+export default connect(mapStateToProps, actions)(withRouter(OnboardPage))

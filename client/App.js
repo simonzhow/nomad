@@ -45,4 +45,6 @@ App.propTypes = {
   getUserAsync: PropTypes.func,
 }
 
-export default connect(() => ({}), actions)(App)
+const mapStateToProps = () => ({})
+
+export default connect(mapStateToProps, actions)(App)

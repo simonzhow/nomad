@@ -102,10 +102,10 @@ export class LandingPage extends React.Component {
   handleLoginClick() {
     const onLoginComplete = () => {
       this.props.getUserAsync((user) => {
-        if (user.hasOnboarded) {
+        if (user.home) {
           this.props.history.replace('/map')
         } else {
-          this.props.history.replace('/map')
+          this.props.history.replace('/onboard')
         }
       })
     }
