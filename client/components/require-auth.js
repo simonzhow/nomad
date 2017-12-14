@@ -18,9 +18,23 @@ const requireAuth = (ComposedComponent) => {
   /* eslint-disable react/prop-types */
   const Wrapper = (props): * => {
     if (props.isLoggedIn === null) {
+      // Don't know if user is logged in yet, wait for Redux auth store update
       return null
     } else if (props.isLoggedIn) {
-      return <ComposedComponent {...props} />
+      // Received authentication status in Redux and user is indeed logged in
+      if (props.user === null) {
+        // Don't have user object yet, wait for Redux user store update
+        return null
+      } else {
+        if (!props.user.home) {
+          // Received user object and user does not have a home yet, send to onboard
+          props.history.replace('/onboard')
+          return <div />
+        } else {
+          // User is logged in and onboarded, allow them to view this route
+          return <ComposedComponent {...props} />
+        }
+      }
     }
 
     // Have verified that the user is not logged in, redirect to landing page
@@ -36,6 +50,7 @@ const requireAuth = (ComposedComponent) => {
 
   const mapStateToProps = (state) => ({
     isLoggedIn: state.auth.isLoggedIn,
+    user: state.user
   })
 
   return connect(mapStateToProps, actions)(withRouter(Wrapper))
