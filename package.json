@@ -1,6 +1,6 @@
 {
   "name": "nomad-app",
-  "version": "0.1",
+  "version": "1.0.0",
   "description": "Gamified travel experiences",
   "scripts": {
     "test": "cross-env NODE_ENV=test PORT=8080 MONGO_URL=mongodb://localhost:27017/mern-test node_modules/.bin/nyc node --harmony-proxies node_modules/.bin/ava",
@@ -14,11 +14,21 @@
     "build:server": "cross-env NODE_ENV=production webpack --config webpack.config.server.js",
     "clean": "rimraf dist",
     "slate": "rimraf node_modules && npm install",
-    "lint": "eslint client server",
+    "lint": "echo  \"Linting...\" && eslint client server",
     "heroku-prebuild": "yarn install",
     "heroku-postbuild": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js"
   },
-  "pre-commit": [ "lint" ],
+  "pre-commit": [
+    "lint"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mihirmathur/nomad.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mihirmathur/nomad/issues"
+  },
+  "homepage": "https://github.com/mihirmathur/nomad",
   "author": "Bibek Ghimire, Uma Lakshminarayan, Monil Patel, Simon Zhou, Mihir Mathur, Anshul Aggarwal",
   "license": "MIT",
   "dependencies": {

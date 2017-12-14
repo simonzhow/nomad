@@ -7,13 +7,15 @@ import { colors } from '../constants/styles'
 import sidebarImage from '../static/img/sidebar.png'
 
 const SidebarContainer = styled.div`
+  flex-shrink: 0;
+  width: 300px;
   overflow-x: hidden;
   overflow-y: auto;
   background-image: url(${sidebarImage});
 `
 
 const SidebarDiv = styled.div`
-  width: 300px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
