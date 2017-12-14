@@ -29,10 +29,8 @@ export function getUser(req, res) {
   @returns void
   */
 export function onboard(req, res) {
-  const user = req.user
-  user.home.lat = req.body.home.lat
-  user.home.lng = req.body.home.lng
-  user.save((error, saved) => {
+  req.user.home = req.body.home
+  req.user.save((error, saved) => {
     if (error) {
       res.status(500).send(error)
       return
