@@ -122,13 +122,13 @@ class Map extends React.Component {
   renderTravelEntries() {
     return this.props.user && this.props.user.travelEntries &&
       this.props.user.travelEntries.map(entry => {
-        const { title, images, location } = entry
+        const { travel_id, photo_url: image, location } = entry
         return (
           <MapMarker
-            key={title}
+            key={travel_id}
             lat={location.lat}
             lng={location.lng}
-            images={images}
+            images={[image].filter(Boolean)}
             size={this.calculateImageSize()}
             onClick={this.handleEntryClick.bind(this, entry)}
           />

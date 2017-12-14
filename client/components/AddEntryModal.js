@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 import styled, { keyframes } from 'styled-components'
 import { colors } from '../constants/styles'
-
+import Spinner from './Spinner'
 import Button from './Button'
 import LocationSelector from './LocationSelector'
 import ImageChooser from './ImageChooser'
@@ -131,40 +131,51 @@ class AddEntryModal extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: '',
+      title: '',
       description: '',
       photo: null,
       coordinates: null,
+      submitting: false,
     }
 
     this.photoUploadInput = null
-    this.handleNameChange = (evt) => { this.setState({ name: evt.target.value }) }
+    this.handleTitleChange = (evt) => { this.setState({ title: evt.target.value }) }
     this.handleDescriptionChange = (evt) => { this.setState({ description: evt.target.value }) }
-    this.handleNewPhoto = (photo) => { this.setState({ photo }) }
+    this.handleNewPhoto = this.handleNewPhoto.bind(this)
     this.handleNewCoordinates = (coordinates) => { this.setState({ coordinates }) }
     this.submit = this.submit.bind(this)
   }
 
   isReadyToSubmit() {
-    const { name, description, photo, coordinates } = this.state
-    return Boolean(
-      name && description && ((photo && photo.coordinates) || coordinates)
-    )
+    const { title, description, coordinates } = this.state
+    return Boolean(title && description && coordinates)
+  }
+
+  handleNewPhoto(photo) {
+    this.setState({ photo })
+    if (photo.coordinates) {
+      this.setState({ coordinates: photo.coordinates })
+    }
   }
 
   submit() {
-    const { name: title, description, photo, coordinates: location } = this.state
-    const isReadyToSubmit = Boolean(
-      title && description && ((photo && photo.coordinates) || location)
-    )
-    if (this.props.accessToken && isReadyToSubmit) {
+    const { title, description, photo, coordinates: location } = this.state
+    const formData = new FormData()
+    if (photo && photo.file) {
+      formData.append('photo', photo.file)
+    }
+    formData.append('title', title)
+    formData.append('description', description)
+    formData.append('location', JSON.stringify(location))
+    if (this.props.accessToken && this.isReadyToSubmit()) {
+      this.setState({ submitting: true })
       axios({
         method: 'post',
         url: ADD_TRAVEL_ENTRY,
         headers: {
           Authorization: `Bearer ${this.props.accessToken}`,
         },
-        data: { travelEntry: { title, description, location } },
+        data: formData,
       })
         .then(() => {
           this.props.onSubmit()
@@ -187,11 +198,11 @@ class AddEntryModal extends React.Component {
           <ColumnsWrapper>
             <FormColumn>
 
-              <FormItem name='Name' required>
+              <FormItem name='Title' required>
                 <FormInput
-                  onChange={this.handleNameChange}
+                  onChange={this.handleTitleChange}
                   type='text'
-                  name='name'
+                  name='title'
                   placeholder='Hiked Mt. Everest'
                 />
               </FormItem>
@@ -199,7 +210,7 @@ class AddEntryModal extends React.Component {
               <FormItem name='Description' required grow>
                 <FormTextArea
                   onChange={this.handleDescriptionChange}
-                  name='name'
+                  name='description'
                   placeholder='It only took me 3 hours!'
                 />
               </FormItem>
@@ -223,12 +234,16 @@ class AddEntryModal extends React.Component {
             </FormColumn>
           </ColumnsWrapper>
 
-          <Button
-            disabled={!this.isReadyToSubmit()}
-            onClick={this.submit}
-          >
-            Submit
-          </Button>
+          {
+            this.state.submitting ?
+              <Spinner /> :
+              <Button
+                disabled={!this.isReadyToSubmit()}
+                onClick={this.submit}
+              >
+                Submit
+              </Button>
+          }
 
         </StyledForm>
       </AddEntryModalWrapper>

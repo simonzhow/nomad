@@ -3,9 +3,6 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { colors } from '../constants/styles'
 
-// Temp static element
-import temp from './Sidebar/images/bibek-ghimire.jpg'
-
 const UserCardDiv = styled.div`
   border-radius: 2px;
   width: 300px;
@@ -69,7 +66,7 @@ export default function UserCard(props) {
     <UserCardDiv>
 
       <UserCardPhotoDiv>
-        <UserCardPhoto src={temp} />
+        <UserCardPhoto src='http://placehold.it/400x400' />
       </UserCardPhotoDiv>
 
       <UserCardNameDiv>

@@ -73,7 +73,7 @@ export default class ImageChooser extends React.Component {
   handleNewFileInput() {
     const file = this.photoUploadInput.files[0]
     const photo = {
-      name: file.name,
+      file,
       dataURL: null,
       orientation: null,
       coordinates: null,
@@ -161,7 +161,7 @@ export default class ImageChooser extends React.Component {
                   src={photo.dataURL}
                   orientation={photo.orientation}
                 />
-                <PhotoPreviewText>{photo.name}</PhotoPreviewText>
+                <PhotoPreviewText>{photo.file && photo.file.name}</PhotoPreviewText>
               </PhotoPreviewDiv>
           }
         </PhotoUploadDiv>

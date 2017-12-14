@@ -67,8 +67,9 @@ const PointsIndicator = styled.div`
   height: 30px;
   border-radius: 15px;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 0px;
+  right: 0px;
+  transform: translate(50%, -50%);
 `
 
 const EntryImage = styled.img`
@@ -80,7 +81,7 @@ export default function MapMarkerDetailedView(props) {
   const { title, description, images, points } = props.entry
   return (
     <SelectedEntryView>
-      <PointsIndicator>{`+${points}`}</PointsIndicator>
+      <PointsIndicator>{`+${Math.floor(points)}`}</PointsIndicator>
       <TitleText>{title}</TitleText>
       <DescriptionText>{description}</DescriptionText>
       <ImageCarousel>

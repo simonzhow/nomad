@@ -5,7 +5,6 @@ import bodyParser from 'body-parser'
 import path from 'path'
 import cors from 'cors'
 import passport from 'passport'
-import IntlWrapper from '../client/modules/Intl/IntlWrapper'
 
 // Webpack Requirements
 import webpack from 'webpack'
@@ -34,11 +33,11 @@ import Helmet from 'react-helmet'
 // Import required modules
 import routes from '../client/routes'
 import { fetchComponentData } from './util/fetchData'
-import posts from './routes/post.routes'
 import users from './routes/user_routes'
 import travelEntries from './routes/travelentry_routes'
-import dummyData from './dummyData'
 import serverConfig from './config'
+import cloudinary from 'cloudinary'
+cloudinary.config(serverConfig.cloudinary)
 require('./auth')()
 
 // Set native promises as mongoose promise
@@ -50,9 +49,6 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
     console.error('Please make sure Mongodb is installed and running!') // eslint-disable-line no-console
     throw error
   }
-
-  // feed some dummy data in DB.
-  dummyData()
 })
 
 // Apply body Parser and server public assets and routes
@@ -63,7 +59,6 @@ app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }))
 app.use(Express.static(path.resolve(__dirname, '../dist/client')))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use('/api/posts', posts)
 app.use('/api/users', users)
 app.use('/api/travelentries', travelEntries)
 
@@ -87,7 +82,7 @@ const renderFullPage = (html, initialState) => {
 
         ${process.env.NODE_ENV === 'production' ? `<link rel='stylesheet' href='${assetsManifest['/app.css']}' />` : ''}
         <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700' rel='stylesheet' type='text/css'/>
-        <link rel="shortcut icon" href="http://res.cloudinary.com/hashnode/image/upload/v1455629445/static_imgs/mern/mern-favicon-circle-fill.png" type="image/png" />
+        <link rel="shortcut icon" href="https://ibb.co/iRQ0um" type="image/png" />
       </head>
       <body>
         <div id="root">${html}</div>
@@ -133,9 +128,7 @@ app.use((req, res, next) => {
       .then(() => {
         const initialView = renderToString(
           <Provider store={store}>
-            <IntlWrapper>
-              <RouterContext {...renderProps} />
-            </IntlWrapper>
+            <RouterContext {...renderProps} />
           </Provider>
         )
         const finalState = store.getState()
