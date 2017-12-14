@@ -2,7 +2,9 @@ import TravelEntry from '../models/travelentry'
 import Guid from 'guid'
 import sanitizeHtml from 'sanitize-html'
 import User from '../models/user'
-import geolib from 'geolib'
+import async from 'async'
+import { calculatePoints } from '../util/travel-entry-helpers'
+
 /**
   Gets all travel entries
   @param req
@@ -18,36 +20,18 @@ export function getTravelEntries(req, res) {
     res.json({ travelEntries })
   })
 }
-/**
-* Calculates the number of points to be added to the user for the new Travel Entry
-* @param req {JSON} - Request sent to function
-* @param req {JSON} - Request sent to function
-*/
-export function calculatePoints(user, location, photoPresent) {
-// How to actually calculate the points
-  const distance = geolib.getDistance(
-    { latitude: location.lat, longitude: location.lng },
-    { latitude: user.home.lat, longitude: user.home.lng }
-  )
-  const diameterOfEarth = 12742000
-  let totalPoints = (distance / diameterOfEarth) * distance
-  // Incentivize users to add photos
-  if (photoPresent) {
-    totalPoints += 10
-  }
-  return totalPoints
-}
-export function createTravelEntry(req, res) {
-  const { travelEntry } = req.body
-  const {
-    title,
-    location,
-    description,
-    photo_url,
-  } = travelEntry
 
+/**
+  Creates a travel entry for the user corresponding to the provided access token
+  @param req
+  @param res
+  @returns void
+  */
+export function createTravelEntry(req, res) {
+  const { title, description, photoUrl } = req.body
+  const location = JSON.parse(req.body.location)
   if (!title || !location || !description) {
-    res.status(403).end()
+    res.status(400).end()
     return
   }
   const newTravelEntry = new TravelEntry()
@@ -56,35 +40,41 @@ export function createTravelEntry(req, res) {
   newTravelEntry.user_id = req.user.user_id
   newTravelEntry.travel_id = Guid.create()
   newTravelEntry.description = sanitizeHtml(description)
-  newTravelEntry.photo_url = sanitizeHtml(photo_url)
+  newTravelEntry.photo_url = photoUrl || null
 
-  let photoPresent = false
-  if (newTravelEntry.photo_url !== undefined) {
-    photoPresent = true
-  }
-  User.findOne({ user_id: newTravelEntry.user_id }).exec((err, user) => {
-    if (err) {
-      res.status(500).send(err)
-      return
-    }
-    newTravelEntry.points = calculatePoints(user, location, photoPresent)
-    user.points += newTravelEntry.points
-    user.save((error) => {
-      if (error) {
-        res.status(500).send(error)
-        return
-      }
-      newTravelEntry.save((newTravelEntryErr, saved) => {
-        if (newTravelEntryErr) {
-          res.status(500).send(newTravelEntryErr)
-          return
-        }
-        res.json({ saved })
+  async.waterfall([
+    function (cb) {
+      // Find the user making the request, calculate entry points, and update
+      // user and entry with the points
+      User.findOne({ user_id: newTravelEntry.user_id }).exec((userFindErr, user) => {
+        if (userFindErr) { cb(userFindErr) }
+        newTravelEntry.points = calculatePoints(user, location, Boolean(req.file))
+        user.points += newTravelEntry.points
+        user.save((userSaveErr) => {
+          if (userSaveErr) { cb(userSaveErr) }
+          cb(null)
+        })
       })
-    })
+    },
+    function (cb) {
+      // Save the travel entry being created right now
+      newTravelEntry.save((newTravelEntryErr, saved) => {
+        if (newTravelEntryErr) { cb(newTravelEntryErr) }
+        res.json({ saved })
+        cb(null)
+      })
+    },
+  ], (err) => {
+    if (err) { res.status(500).send(err) }
   })
 }
 
+/**
+  Deletes the specified travel entry if the corresonding user owns it
+  @param req
+  @param res
+  @returns void
+  */
 export function deleteTravelEntry(req, res) {
   TravelEntry.findOne({ travel_id: req.params.travel_id }).exec((err, travelentry) => {
     if (err) {
