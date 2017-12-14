@@ -1,9 +1,14 @@
-import React, { Component } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
+import axios from 'axios'
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 import Script from 'react-load-script'
 import bg from '../../static/img/onboard_bg.jpg'
 import GMAP_CONFIG from '../../config/google-maps'
+import { COMPLETE_ONBOARDING } from '../../constants/api-endpoints'
+import * as actions from '../../actions'
 
 const OnboardDiv = styled.div`
   width: 100%;
@@ -34,7 +39,7 @@ const Title = styled.h1`
 
 const googleMapsApi = `https://maps.googleapis.com/maps/api/js?key=${GMAP_CONFIG.bootstrapURLKeys.key}&libraries=places`
 
-export default class OnboardPage extends Component {
+class OnboardPage extends React.Component {
   constructor(props) {
     super(props)
     this.state = { searchQuery: '', scriptLoaded: false }
@@ -55,11 +60,25 @@ export default class OnboardPage extends Component {
     // Use Google Places API to try to get the coordinates from the search query
     geocodeByAddress(searchQuery)
       .then(results => getLatLng(results[0]))
-      .then(() => {
-        // if (coordinates && coordinates.lat && coordinates.lng) {
-        document.location.href = '/map'
-        // this.setState({ coordinates })
-        // }
+      .then((res) => {
+        axios({
+          method: 'post',
+          url: COMPLETE_ONBOARDING,
+          headers: {
+            Authorization: `Bearer ${this.props.accessToken}`,
+          },
+          data: {
+            home: { lat: res.lat, lng: res.lng },
+          },
+        })
+          .then((postRes) => {
+            console.log(`updating user with ${postRes.user}`)
+            this.props.updateUser(postRes.user)
+          })
+          .catch(err => {
+            // eslint-disable-next-line
+            console.log(err)
+          })
       })
       .catch(error => {
         // eslint-disable-next-line no-console
@@ -104,3 +123,14 @@ export default class OnboardPage extends Component {
     )
   }
 }
+
+OnboardPage.propTypes = {
+  accessToken: PropTypes.string,
+  updateUser: PropTypes.func,
+}
+
+const mapStateToProps = (state) => ({
+  accessToken: state.auth.accessToken,
+})
+
+export default connect(mapStateToProps, actions)(OnboardPage)
