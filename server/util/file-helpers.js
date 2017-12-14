@@ -1,9 +1,15 @@
 import cloudinary from 'cloudinary'
 import multer from 'multer'
 /**
+<<<<<<< HEAD
+  * Handles uploading to Cloudinary
+  * @param req {JSON} Request send to function
+  * @param res {JSON} Response sent from function
+=======
    Handles uploading to Cloudinary
   * @param req {JSON}
   * @param res {JSON}
+>>>>>>> master
   */
 export const attachPhotoUrl = (req, res, next) => {
   // If a file (photo) is provided with the request, attach a Cloudinary url
