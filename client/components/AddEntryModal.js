@@ -153,9 +153,9 @@ class AddEntryModal extends React.Component {
   }
 
   submit() {
-    const { name: title, description, photo, coordinates } = this.state
+    const { name: title, description, photo, coordinates: location } = this.state
     const isReadyToSubmit = Boolean(
-      title && description && ((photo && photo.coordinates) || coordinates)
+      title && description && ((photo && photo.coordinates) || location)
     )
     if (this.props.accessToken && isReadyToSubmit) {
       axios({
@@ -164,19 +164,10 @@ class AddEntryModal extends React.Component {
         headers: {
           Authorization: `Bearer ${this.props.accessToken}`,
         },
-        data: {
-          travelEntry: {
-            title,
-            description,
-            location: {
-              latitude: coordinates.lat,
-              longitude: coordinates.lng,
-            },
-          },
-        },
+        data: { travelEntry: { title, description, location } },
       })
         .then(() => {
-          this.props.onSuccess()
+          this.props.onSubmit()
         })
         .catch(err => {
           // eslint-disable-next-line no-console
@@ -247,7 +238,8 @@ class AddEntryModal extends React.Component {
 
 AddEntryModal.propTypes = {
   accessToken: PropTypes.string,
-  onSuccess: PropTypes.func,
+  onSubmit: PropTypes.func,
+  innerRef: PropTypes.func,
 }
 
 const mapStateToProps = (state) => ({

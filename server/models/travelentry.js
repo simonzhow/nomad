@@ -6,7 +6,7 @@ const travelEntrySchema = new Schema({
   user_id: { type: String, required: true },
   title: { type: String, required: true },
   description: { type: String, required: true },
-  location: { type: Schema.Types.ObjectId, ref: 'Location', required: true },
+  location: Schema.Types.Mixed,
   photo_url: { type: String },
   points: { type: Number, required: true },
 })

@@ -10,8 +10,6 @@ import MapMarkerDetailedView from './MapMarkerDetailedView'
 import GMAP_CONFIG, { ZOOM_LEVELS } from '../config/google-maps'
 import * as actions from '../actions'
 
-import travelEntries from '../dummy-data/travel-entries'
-
 const MAP_PHOTO_DIMS = {
   MIN: { SIZE: 15, ZOOM: 3 }, // Image is 15x15 at zoom level <= 3
   MAX: { SIZE: 120, ZOOM: 15 }, // Image is 120x120 at zoom level >= 15
@@ -113,26 +111,28 @@ class Map extends React.Component {
         this.setState({ addEntryModalOpen: false })
       }
     }
+  }
 
   handleAddEntrySuccess() {
     this.setState({ addEntryModalOpen: false })
-    this.getUserAsync()
+    this.props.getUserAsync()
   }
 
   renderTravelEntries() {
-    return travelEntries.map(entry => {
-      const { name, images, location } = entry
-      return (
-        <MapMarker
-          key={name}
-          lat={location.lat}
-          lng={location.lng}
-          images={images}
-          size={this.calculateImageSize()}
-          onClick={this.handleEntryClick.bind(this, entry)}
-        />
-      )
-    })
+    return this.props.user && this.props.user.travelEntries &&
+      this.props.user.travelEntries.map(entry => {
+        const { title, images, location } = entry
+        return (
+          <MapMarker
+            key={title}
+            lat={location.lat}
+            lng={location.lng}
+            images={images}
+            size={this.calculateImageSize()}
+            onClick={this.handleEntryClick.bind(this, entry)}
+          />
+        )
+      })
   }
 
   render() {
@@ -166,7 +166,7 @@ class Map extends React.Component {
             <AddEntryModalWrapper>
               <AddEntryModal
                 innerRef={div => { this.addEntryModal = div }}
-                onSubmit={() => { this.setState({ addEntryModalOpen: false }) }}
+                onSubmit={this.handleAddEntrySuccess}
               />
             </AddEntryModalWrapper>
         }

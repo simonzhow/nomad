@@ -46,6 +46,9 @@ export default class MapMarker extends React.Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      tooltipOpen: false,
+    }
     this.handleMarkerClick = this.handleMarkerClick.bind(this)
   }
 

@@ -118,7 +118,7 @@ export class LandingPage extends React.Component {
           this.props.updateAuth(res.authResponse.accessToken)
           onLoginComplete()
         }
-      })
+      }, { scope: 'user_friends' })
     }
   }
 

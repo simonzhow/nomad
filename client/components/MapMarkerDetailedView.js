@@ -61,7 +61,7 @@ export default function MapMarkerDetailedView(props) {
       <p>{`${location.lat}, ${location.lng}`}</p>
       <p>{description}</p>
       <ImageCarousel>
-        {images.map(image => (
+        {images && images.map(image => (
           <div key={image}>
             <EntryImage alt='whatever' src={image} />
           </div>

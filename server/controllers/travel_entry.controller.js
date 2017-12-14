@@ -1,6 +1,4 @@
-// Points Controller don't worry about exporting
 import TravelEntry from '../models/travelentry'
-import Location from '../models/location'
 import Guid from 'guid'
 import sanitizeHtml from 'sanitize-html'
 import User from '../models/user'
@@ -25,15 +23,15 @@ export function getTravelEntries(req, res) {
 * @param req {JSON} - Request sent to function
 * @param req {JSON} - Request sent to function
 */
-export function calculatePoints(home, location, photoPresent) {
+export function calculatePoints(user, location, photoPresent) {
 // How to actually calculate the points
   const distance = geolib.getDistance(
-    { latitude: location.latitude, longitude: location.longitude },
-    { latitude: home.latitude, longitude: home.longitude }
+    { latitude: location.lat, longitude: location.lng },
+    { latitude: user.home.lat, longitude: user.home.lng }
   )
   const diameterOfEarth = 12742000
   let totalPoints = (distance / diameterOfEarth) * distance
-  // Incentive users to add photos
+  // Incentivize users to add photos
   if (photoPresent) {
     totalPoints += 10
   }
@@ -53,44 +51,35 @@ export function createTravelEntry(req, res) {
     return
   }
   const newTravelEntry = new TravelEntry()
-  const newLocation = new Location()
-  newLocation.latitude = location.latitude
-  newLocation.longitude = location.longitude
-  newLocation.save((lerror, lsaved) => {
-    if (lerror) {
-      res.status(500).send(lerror)
+  newTravelEntry.title = sanitizeHtml(title)
+  newTravelEntry.location = location
+  newTravelEntry.user_id = req.user.user_id
+  newTravelEntry.travel_id = Guid.create()
+  newTravelEntry.description = sanitizeHtml(description)
+  newTravelEntry.photo_url = sanitizeHtml(photo_url)
+
+  let photoPresent = false
+  if (newTravelEntry.photo_url !== undefined) {
+    photoPresent = true
+  }
+  User.findOne({ user_id: newTravelEntry.user_id }).exec((err, user) => {
+    if (err) {
+      res.status(500).send(err)
       return
     }
-    newTravelEntry.title = sanitizeHtml(title)
-    newTravelEntry.location = lsaved
-    newTravelEntry.user_id = req.user.user_id
-    newTravelEntry.travel_id = Guid.create()
-    newTravelEntry.description = sanitizeHtml(description)
-    newTravelEntry.photo_url = sanitizeHtml(photo_url)
-
-    let photoPresent = false
-    if (newTravelEntry.photo_url !== undefined) {
-      photoPresent = true
-    }
-    User.findOne({ user_id: newTravelEntry.user_id }).exec((err, user) => {
-      if (err) {
-        res.status(500).send(err)
+    newTravelEntry.points = calculatePoints(user, location, photoPresent)
+    user.points += newTravelEntry.points
+    user.save((error) => {
+      if (error) {
+        res.status(500).send(error)
         return
       }
-      newTravelEntry.points = calculatePoints(user.home, lsaved, photoPresent)
-      user.points += newTravelEntry.points
-      user.save((error) => {
-        if (error) {
-          res.status(500).send(error)
+      newTravelEntry.save((newTravelEntryErr, saved) => {
+        if (newTravelEntryErr) {
+          res.status(500).send(newTravelEntryErr)
           return
         }
-        newTravelEntry.save((newTravelEntryErr, saved) => {
-          if (newTravelEntryErr) {
-            res.status(500).send(newTravelEntryErr)
-            return
-          }
-          res.json({ saved })
-        })
+        res.json({ saved })
       })
     })
   })

@@ -18,7 +18,7 @@ export function getUser(req, res) {
     if (err) {
       res.status(500).send(err); return
     }
-    res.json({ user: Object.assign({}, req.user._doc, { travelEntries }) })
+    res.json({ user: Object.assign({}, req.user.toObject(), { travelEntries }) })
   })
 }
 
