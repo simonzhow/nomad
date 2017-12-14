@@ -15,4 +15,9 @@ A web-app that encourages travel through an interactive travel history map and c
 4. Once yarn install is complete, run `yarn start`
 5. Go to [localhost:8000](localhost:8000).
 
+## Generating jsdoc 
+1. Run 'npm install jsdoc' to download the software
+2. Run 'jsdoc filename' to generate the jsdoc
+3. This will generate a /out folder in the current directory.
+4. Run 'cd out' and 'open index.html' to see all jsdocs. If you would like to see individual files look at the filename.js.html instead
 Reach out to anybody on the team regarding questions or concerns.
