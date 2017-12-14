@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import styled from 'styled-components'
 import axios from 'axios'
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
@@ -50,6 +51,20 @@ class OnboardPage extends React.Component {
     this.handleScriptLoad = this.handleScriptLoad.bind(this)
   }
 
+  componentDidMount() {
+    this.catchAlreadyOnboardedUsers()
+  }
+
+  componentDidUpdate() {
+    this.catchAlreadyOnboardedUsers()
+  }
+
+  catchAlreadyOnboardedUsers() {
+    if (this.props.user && this.props.user.home) {
+      this.props.history.replace('/map')
+    }
+  }
+
   handleScriptLoad() {
     this.setState({ scriptLoaded: true })
   }
@@ -72,8 +87,7 @@ class OnboardPage extends React.Component {
           },
         })
           .then((postRes) => {
-            console.log(`updating user with ${postRes.user}`)
-            this.props.updateUser(postRes.user)
+            this.props.updateUser(postRes.data.user)
           })
           .catch(err => {
             // eslint-disable-next-line
@@ -111,7 +125,7 @@ class OnboardPage extends React.Component {
         </PlacesDropdown>
       )
     }
-    return (
+    return (this.props.user && !this.props.user.home &&
       <OnboardDiv>
         <Script
           url={googleMapsApi}
@@ -127,10 +141,13 @@ class OnboardPage extends React.Component {
 OnboardPage.propTypes = {
   accessToken: PropTypes.string,
   updateUser: PropTypes.func,
+  user: PropTypes.object,
+  history: PropTypes.object,
 }
 
 const mapStateToProps = (state) => ({
+  user: state.user,
   accessToken: state.auth.accessToken,
 })
 
-export default connect(mapStateToProps, actions)(OnboardPage)
+export default connect(mapStateToProps, actions)(withRouter(OnboardPage))
