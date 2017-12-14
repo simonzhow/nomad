@@ -3,8 +3,8 @@ import styled, { keyframes } from 'styled-components'
 import StarRatings from 'react-star-ratings'
 import Dropdown from 'react-dropdown'
 import axios from 'axios'
-import { colors, shadows } from '../../constants/styles'
-import { proxyurl, ipApi, yelpApi, accessToken } from '../../config/yelp-config'
+import { colors, shadows } from '../constants/styles'
+import { proxyurl, ipApi, yelpApi, accessToken } from '../config/yelp-config'
 
 const Wrapper = styled.section`
   padding: 4em;
