@@ -3,6 +3,9 @@ import TravelEntry from '../models/travelentry'
 import sanitizeHtml from 'sanitize-html'
 import Guid from 'guid'
 import bcrypt from 'bcrypt'
+
+import FB from 'fb'
+
 const saltRounds = 10
 
 /**
@@ -14,11 +17,21 @@ const saltRounds = 10
 export function getUser(req, res) {
   // BIBEK: I think we should attach the user's travel entries along with the user object
   // so they don't have to make another request
-  TravelEntry.find({ user_id: req.user.user_id }).exec((err, travelEntries) => {
-    if (err) {
-      res.status(500).send(err); return
+  const access_token = req.header('authorization').split(' ')[1]
+  const { user_id } = req.user
+
+  FB.api('me', { fields: ['id', 'name', 'friends'], access_token }, (response) => {
+    if (!response || response.error) {
+      res.status(500).send(response.error); return
     }
-    res.json({ user: Object.assign({}, req.user.toObject(), { travelEntries }) })
+
+    const { friends } = response
+    TravelEntry.find({ user_id }).exec((err, travelEntries) => {
+      if (err) {
+        res.status(500).send(err); return
+      }
+      res.json({ user: Object.assign({}, req.user.toObject(), { travelEntries, friends }) })
+    })
   })
 }
 

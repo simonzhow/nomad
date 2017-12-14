@@ -3,7 +3,7 @@ import passport from 'passport'
 import * as TravelEntryController from '../controllers/travel_entry.controller'
 const travelEntryRouter = new Router()
 
-const fbAuth = passport.authenticate('facebook-token', { session: false })
+const fbAuth = passport.authenticate('facebook-token', { scope: 'user_friends', session: false })
 
 // Get all travel entries of a user
 travelEntryRouter.get('/', fbAuth, TravelEntryController.getTravelEntries)
