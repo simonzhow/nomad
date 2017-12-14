@@ -74,7 +74,7 @@ class Map extends React.Component {
   }
 
   toggleAddEntryModal() {
-    this.setState({ addEntryModalOpen: !this.state.addEntryModalOpen })
+    this.setState({ addEntryModalOpen: !this.state.addEntryModalOpen, selectedEntry: null })
   }
 
   calculateImageSize() {

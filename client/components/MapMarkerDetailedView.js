@@ -48,18 +48,41 @@ const ImageCarousel = styled.div`
   }
 `
 
+const TitleText = styled.h1`
+  font-size: 22px;
+  font-weight: bold;
+  color: ${colors.black};
+  margin-bottom: 8px;
+`
+
+const DescriptionText = styled.p`
+  font-size: 12px;
+  color: ${colors.gray};
+`
+const PointsIndicator = styled.div`
+  background-color:  ${colors.green};
+  color: ${colors.white};
+  padding: 8px;
+  font-size: 12px;
+  height: 30px;
+  border-radius: 15px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`
+
 const EntryImage = styled.img`
   height: 100%;
   border-radius: 5px;
 `
 
 export default function MapMarkerDetailedView(props) {
-  const { name, description, location, images } = props.entry
+  const { title, description, images, points } = props.entry
   return (
     <SelectedEntryView>
-      <h4>{name}</h4>
-      <p>{`${location.lat}, ${location.lng}`}</p>
-      <p>{description}</p>
+      <PointsIndicator>{`+${points}`}</PointsIndicator>
+      <TitleText>{title}</TitleText>
+      <DescriptionText>{description}</DescriptionText>
       <ImageCarousel>
         {images && images.map(image => (
           <div key={image}>
