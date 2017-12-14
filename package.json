@@ -16,7 +16,8 @@
     "slate": "rimraf node_modules && npm install",
     "lint": "echo  \"Linting...\" && eslint client server",
     "heroku-prebuild": "yarn install",
-    "heroku-postbuild": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js"
+    "heroku-postbuild": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
+    "doc": "jsdoc -c jsdoc.json -d ./jsdocs" 
   },
   "pre-commit": [
     "lint"
@@ -104,6 +105,7 @@
     "eventsource-polyfill": "^0.9.6",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
+    "jsdoc": "^3.5.5",
     "jsdom": "^9.2.1",
     "json-loader": "^0.5.4",
     "mock-css-modules": "^1.0.0",
