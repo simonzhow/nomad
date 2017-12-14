@@ -17,7 +17,8 @@
     "lint": "echo  \"Linting...\" && eslint client server",
     "heroku-prebuild": "yarn install",
     "heroku-postbuild": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
-    "doc": "jsdoc -c jsdoc.json -d ./jsdocs" 
+    "doc": "jsdoc -c jsdoc.json -d ./jsdocs",
+    "viewdocs": "open ./jsdocs/index.html"
   },
   "pre-commit": [
     "lint"
