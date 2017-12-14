@@ -3,7 +3,6 @@ import TravelEntry from '../models/travelentry'
 import sanitizeHtml from 'sanitize-html'
 import Guid from 'guid'
 import bcrypt from 'bcrypt'
-
 import FB from 'fb'
 
 const saltRounds = 10
