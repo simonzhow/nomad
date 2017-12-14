@@ -3,8 +3,8 @@ import { Link } from 'react-router'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { colors } from '../../constants/styles'
-import sidebarImage from '../../static/img/sidebar.png'
+import { colors } from '../constants/styles'
+import sidebarImage from '../static/img/sidebar.png'
 
 const SidebarContainer = styled.div`
   overflow-x: hidden;
