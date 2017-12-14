@@ -1,9 +1,13 @@
 import cloudinary from 'cloudinary'
 import multer from 'multer'
-
+/**
+  * Express middleware that attaches a Cloudinary url to req.body if req.file
+  * is present
+  * @function
+  * @param {Object} req - Express Request object
+  * @param {Object} res - Express Response object
+  */
 export const attachPhotoUrl = (req, res, next) => {
-  // If a file (photo) is provided with the request, attach a Cloudinary url
-  // to the request before passing it forward
   if (req.file) {
     cloudinary.uploader.upload(req.file.path, (result) => {
       req.body.photoUrl = result.url

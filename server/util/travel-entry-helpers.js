@@ -13,9 +13,11 @@ const DISTANCE_TO_POINTS = {
   25000: 500,
 }
 /**
-* Calculates the number of points to be added to the user for the new Travel Entry
-* @param req {JSON} - Request sent to function
-* @param req {JSON} - Request sent to function
+*  Calculates the number of points to be added to the user for the new Travel Entry
+*  @param user {User} user associated with Travel Entry
+*  @param location {Location} location of travel entry
+*  @param photoPresent {Boolean} To check if a photo is present for point calculation
+*  @returns points earned
 */
 export function calculatePoints(user, location, photoPresent) {
 // How to actually calculate the points

@@ -1,0 +1,11 @@
+{
+  "source": {
+    "include": [
+      "server/auth",
+      "server/controllers",
+      "server/models",
+      "server/util/file-helpers.js",
+      "server/util/travel-entry-helpers.js"
+    ]
+  }
+}
