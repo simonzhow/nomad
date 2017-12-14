@@ -23,6 +23,26 @@ export function getUser(req, res) {
 }
 
 /**
+  Sets a user's home location
+  @param req
+  @param res
+  @returns void
+  */
+export function onboard(req, res) {
+  const user = req.user
+  user.home.lat = req.body.home.lat
+  user.home.lng = req.body.home.lng
+  user.save((error, saved) => {
+    if (error) {
+      res.status(500).send(error)
+      return
+    } else {
+      res.json({ user: saved })
+    }
+  })
+}
+
+/**
   Creates/registers a new user
   @param req
   @param res
