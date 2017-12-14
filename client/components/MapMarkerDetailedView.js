@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { colors } from '../constants/styles'
+import CloseIcon from './CloseIcon'
 
 const SelectedEntryView = styled.div`
   position: absolute;
@@ -56,7 +57,7 @@ const TitleText = styled.h1`
 `
 
 const DescriptionText = styled.p`
-  font-size: 12px;
+  font-size: 14px;
   color: ${colors.gray};
 `
 const PointsIndicator = styled.div`
@@ -68,7 +69,7 @@ const PointsIndicator = styled.div`
   border-radius: 15px;
   position: absolute;
   top: 0px;
-  right: 0px;
+  right: 40px;
   transform: translate(50%, -50%);
 `
 
@@ -77,19 +78,29 @@ const EntryImage = styled.img`
   border-radius: 5px;
 `
 
+const CloseButtonWrapper = styled.div`
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  cursor: pointer;
+`
+
 export default function MapMarkerDetailedView(props) {
-  const { title, description, images, points } = props.entry
+  const { title, description, photo_url, points } = props.entry
+  // Right now, we only show one image in the ImageCarousel but it's technically
+  // built to support any number of images per entry and it'll render with
+  // horizontal scroll
   return (
     <SelectedEntryView>
+      <CloseButtonWrapper onClick={props.closeView}><CloseIcon /></CloseButtonWrapper>
       <PointsIndicator>{`+${Math.floor(points)}`}</PointsIndicator>
       <TitleText>{title}</TitleText>
       <DescriptionText>{description}</DescriptionText>
       <ImageCarousel>
-        {images && images.map(image => (
-          <div key={image}>
-            <EntryImage alt='whatever' src={image} />
-          </div>
-        ))}
+        {photo_url && <div><EntryImage alt={title} src={photo_url} /></div>}
       </ImageCarousel>
     </SelectedEntryView>
   )
@@ -97,4 +108,5 @@ export default function MapMarkerDetailedView(props) {
 
 MapMarkerDetailedView.propTypes = {
   entry: PropTypes.object.isRequired,
+  closeView: PropTypes.func,
 }

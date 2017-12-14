@@ -11,11 +11,6 @@ import MapMarkerDetailedView from './MapMarkerDetailedView'
 import GMAP_CONFIG, { ZOOM_LEVELS } from '../config/google-maps'
 import * as actions from '../actions'
 
-const MAP_PHOTO_DIMS = {
-  MIN: { SIZE: 15, ZOOM: 3 }, // Image is 15x15 at zoom level <= 3
-  MAX: { SIZE: 120, ZOOM: 15 }, // Image is 120x120 at zoom level >= 15
-}
-
 const MapWrapper = styled.div`
   flex-grow: 1;
   position: relative;
@@ -78,11 +73,9 @@ class Map extends React.Component {
   }
 
   calculateImageSize() {
-    const { mapZoom } = this.state
-    const { MAX, MIN } = MAP_PHOTO_DIMS
-    const SIZE_RANGE = MAX.SIZE - MIN.SIZE
-    const ZOOM_RANGE = MAX.ZOOM - MIN.ZOOM
-    return MIN.SIZE + (((mapZoom - MIN.ZOOM) / ZOOM_RANGE) * SIZE_RANGE)
+    // TODO: Determine a good algorithm for sizing the images based on map zoom
+    // level
+    return 50
   }
 
   zoomToMarker(lat, lng) {
@@ -176,7 +169,13 @@ class Map extends React.Component {
             </AddEntryModalWrapper>
         }
 
-        {selectedEntry && <MapMarkerDetailedView entry={selectedEntry} />}
+        {
+          selectedEntry &&
+            <MapMarkerDetailedView
+              entry={selectedEntry}
+              closeView={() => { this.setState({ selectedEntry: null }) }}
+            />
+        }
       </MapWrapper> : null
     )
   }
