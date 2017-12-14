@@ -11,8 +11,9 @@ const MapMarkerWrapper = styled.div`
 const MapPhotoWrapper = styled.div`
   cursor: pointer;
   background-image: url(${props => props.src});
-  background-size: contain;
+  background-size: cover;
   background-position: center;
+  background-repeat:no-repeat;
   width: ${props => props.size}px;
   height: ${props => props.size}px;
   border-radius: 1px;

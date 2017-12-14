@@ -40,6 +40,12 @@ import travelEntries from './routes/travelentry_routes'
 import dummyData from './dummyData'
 import serverConfig from './config'
 require('./auth')()
+import cloudinary from 'cloudinary'
+cloudinary.config({
+  cloud_name: 'nomad-app',
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
 
 // Set native promises as mongoose promise
 mongoose.Promise = global.Promise
