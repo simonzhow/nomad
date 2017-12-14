@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import AddEntryButton from './AddEntryButton'
 import AddEntryModal from './AddEntryModal'
 import MapMarker from './MapMarker'
+import HomeMarker from './HomeMarker'
 import MapMarkerDetailedView from './MapMarkerDetailedView'
 import GMAP_CONFIG, { ZOOM_LEVELS } from '../config/google-maps'
 import * as actions from '../actions'
@@ -149,6 +150,10 @@ class Map extends React.Component {
             zoom={this.state.mapZoom}
             onChange={this.handleMapBoundsChange}
           >
+            <HomeMarker
+              lat={this.props.user.home.lat}
+              lng={this.props.user.home.lng}
+            />
             {this.renderTravelEntries()}
           </GoogleMapReact>
         </GoogleMapReactWrapper>
