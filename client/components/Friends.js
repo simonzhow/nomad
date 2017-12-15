@@ -41,16 +41,17 @@ export class Friends extends React.Component {
   }
 
   render() {
+    const getFullName = (user) => (`${user.first_name.toLowerCase()} ${user.last_name.toLowerCase()}`)
     // this search works matching for any string within a name
     // TODO: need to figure out how to match from beginning ONLY
     const filteredFriends = this.props.friends.filter((friend) => {
-      const { first_name, last_name } = friend
-      const fullName = `${first_name.toLowerCase()} ${last_name.toLowerCase()}`
-      return fullName.includes(this.state.searchQuery.toLowerCase())
+      return getFullName(friend).includes(this.state.searchQuery.toLowerCase())
+    }).sort((a, b) => {
+      const aName = getFullName(a)
+      const bName = getFullName(b)
+      if (aName === bName) { return 0 }
+      return (aName < bName) ? -1 : 1
     })
-
-    console.log('friends:', this.props.friends)
-    console.log('filtered friends:', filteredFriends)
 
     return (
       <FriendsDiv>
