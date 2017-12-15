@@ -4,12 +4,16 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import UserCard from './UserCard'
 import SearchBar from './SearchBar'
+import FriendMap from './FriendMap'
+import CloseIcon from './CloseIcon'
 import actions from '../actions'
+import { colors, shadows } from '../constants/styles'
 
 const FriendsDiv = styled.div`
   padding: 30px;
   overflow: auto;
   transition: margin-left 0.125s ease-in-out;
+  position: relative;
 `
 
 const FriendsTitleDiv = styled.div``
@@ -31,11 +35,43 @@ const FriendsUserCards = styled.div`
   text-align: left;
 `
 
+const FriendMapBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0,0.4);
+`
+
+const FriendMapModal = styled.div`
+  position: relative;
+  width: 70%;
+  background-color: ${colors.white};
+  box-shadow: ${shadows.default};
+  border-radius: 10px;
+  padding: 30px;
+`
+
+const MapCloseButton = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+`
+
 export class Friends extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       searchQuery: '',
+      selectedFriend: null,
     }
     this.props.requestFriendsUpdate()
   }
@@ -66,12 +102,27 @@ export class Friends extends React.Component {
         </FriendsSearchDiv>
 
         <FriendsUserCards>
-          {
-            filteredFriends.map((user, i) => (
-              <UserCard key={i} user={user} />
-            ))
-          }
+          {filteredFriends.map(user =>
+            <UserCard
+              key={user.user_id}
+              user={user}
+              onSelect={() => { this.setState({ selectedFriend: user }) }}
+            />
+          )}
         </FriendsUserCards>
+
+        {this.state.selectedFriend && (
+          <FriendMapBackground>
+            <FriendMapModal>
+              <MapCloseButton
+                onClick={() => { this.setState({ selectedFriend: null }) }}
+              >
+                <CloseIcon />
+              </MapCloseButton>
+              <FriendMap friend={this.state.selectedFriend} />
+            </FriendMapModal>
+          </FriendMapBackground>
+        )}
       </FriendsDiv>
     )
   }

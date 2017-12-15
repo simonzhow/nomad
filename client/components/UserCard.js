@@ -33,13 +33,13 @@ const UserCardName = styled.div`
   font-weight: bold;
 `
 
-const UserCardButton = styled.button`
+const UserCardButton = styled.div`
   padding: 10px 20px 10px 20px;
   background-color: white;
   color: ${colors.green};
+  border: 2px solid ${colors.green};
   border-radius: 15px;
   cursor: pointer;
-  border-color: ${colors.green};
   font-size: 14px;
   &:focus {
     outline: 0;
@@ -55,10 +55,13 @@ export default function UserCard(props) {
     <UserCardDiv>
       <UserCardPhoto src={props.user.profile_pic} />
       <UserCardName>{`${props.user.first_name} ${props.user.last_name}`}</UserCardName>
-      <UserCardButton>{`View ${props.user.first_name}'s Map`}</UserCardButton>
+      <UserCardButton onClick={props.onSelect}>
+        {`View ${props.user.first_name}'s Map`}
+      </UserCardButton>
     </UserCardDiv>
   )
 }
 UserCard.propTypes = {
   user: PropTypes.object.isRequired,
+  onSelect: PropTypes.func,
 }

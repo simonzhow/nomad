@@ -1,6 +1,6 @@
 export const ZOOM_LEVELS = {
   LOCAL: 14,
-  DEFAULT: 12,
+  DEFAULT: 13,
 }
 
 export default {
@@ -9,6 +9,6 @@ export default {
     language: 'en',
     libraries: 'places',
   },
-  defaultCenter: { lat: 47.44642, lng: -122.29949 },
+  defaultCenter: { lat: 34.074949, lng: -118.441318 },
   defaultZoom: ZOOM_LEVELS.DEFAULT,
 }
