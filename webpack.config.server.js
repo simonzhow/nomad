@@ -1,6 +1,5 @@
 var fs = require('fs');
 var path = require('path');
-var ExternalsPlugin = require('webpack-externals-plugin');
 
 module.exports = {
 
@@ -53,10 +52,4 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new ExternalsPlugin({
-      type: 'commonjs',
-      include: path.join(__dirname, './node_modules/'),
-    }),
-  ],
 };
