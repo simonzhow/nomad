@@ -1,4 +1,5 @@
 import TravelEntry from '../models/travelentry'
+import User from '../models/user'
 import FB from 'fb'
 
 /**
@@ -9,21 +10,14 @@ import FB from 'fb'
   @returns void
   */
 export function getUser(req, res) {
-  const access_token = req.header('authorization').split(' ')[1]
+  // const access_token = req.header('authorization').split(' ')[1]
   const { user_id } = req.user
 
-  FB.api('me', { fields: ['id', 'name', 'friends'], access_token }, (response) => {
-    if (!response || response.error) {
-      res.status(500).send(response.error); return
+  TravelEntry.find({ user_id }).exec((err, travelEntries) => {
+    if (err) {
+      res.status(500).send(err); return
     }
-
-    const { friends } = response
-    TravelEntry.find({ user_id }).exec((err, travelEntries) => {
-      if (err) {
-        res.status(500).send(err); return
-      }
-      res.json({ user: Object.assign({}, req.user.toObject(), { travelEntries, friends }) })
-    })
+    res.json({ user: Object.assign({}, req.user.toObject(), { travelEntries }) })
   })
 }
 
@@ -43,5 +37,30 @@ export function onboard(req, res) {
       saved.travelEntries = []
       res.json({ user: saved })
     }
+  })
+}
+
+export function getFriends(req, res) {
+  const access_token = req.header('authorization').split(' ')[1]
+
+  FB.api('me', { fields: ['id', 'name', 'friends'], access_token }, (response) => {
+    if (!response || response.error) {
+      res.status(500).send(response.error); return
+    }
+
+    const { friends } = response
+    const IDs = []
+    for (let i = 0; i < friends.data.length; i++) {
+      IDs.push(friends.data[i].id)
+    }
+
+    User.find({ user_id: { $in: IDs } }).exec((err, friendsWithPoints) => {
+      if (err) {
+        res.status(500).send(err)
+        return
+      } else {
+        res.json({ friendsWithPoints })
+      }
+    })
   })
 }

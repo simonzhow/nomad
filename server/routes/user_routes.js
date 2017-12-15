@@ -11,4 +11,7 @@ userRouter.get('/', fbAuth, UserController.getUser)
 // Onboard a user (set their home location)
 userRouter.post('/onboard', fbAuth, UserController.onboard)
 
+// Get a user's friends and their points
+userRouter.get('/friends', fbAuth, UserController.getFriends)
+
 export default userRouter
