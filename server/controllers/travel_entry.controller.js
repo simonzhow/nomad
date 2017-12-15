@@ -2,6 +2,7 @@ import TravelEntry from '../models/travelentry'
 import Guid from 'guid'
 import sanitizeHtml from 'sanitize-html'
 import User from '../models/user'
+import FB from 'fb'
 import async from 'async'
 import { calculatePoints } from '../util/travel-entry-helpers'
 
@@ -12,12 +13,38 @@ import { calculatePoints } from '../util/travel-entry-helpers'
   @returns void
   */
 export function getTravelEntries(req, res) {
-  // Not sure what to populate this with
-  TravelEntry.find({ user_id: req.params.user_id }).exec((err, travelEntries) => {
-    if (err) {
-      res.status(500).send(err)
+  const access_token = req.header('authorization').split(' ')[1]
+  const user_id = req.params.user_id
+
+  FB.api('me', { fields: ['id', 'name', 'friends'], access_token }, (response) => {
+    if (!response || response.error) {
+      res.status(500).send(response.error); return
     }
-    res.json({ travelEntries })
+
+    const { friends } = response
+    let isFriend = false
+    if (req.user.user_id === user_id) {
+      isFriend = true
+    } else {
+      for (let i = 0; i < friends.data.length; i++) {
+        if (friends.data[i].id === user_id) {
+          isFriend = true
+          break
+        }
+      }
+    }
+    if (isFriend) {
+      TravelEntry.find({ user_id }).exec((err, travelEntries) => {
+        if (err) {
+          res.status(500).send(err)
+          return
+        }
+        res.json({ travelEntries })
+      })
+    } else {
+      res.status(403)
+      return
+    }
   })
 }
 

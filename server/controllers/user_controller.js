@@ -1,4 +1,6 @@
 import TravelEntry from '../models/travelentry'
+import sanitizeHtml from 'sanitize-html'
+import FB from 'fb'
 
 /**
   Responds to client with the user object for req.user.user_id; additionally
@@ -8,11 +10,21 @@ import TravelEntry from '../models/travelentry'
   @returns void
   */
 export function getUser(req, res) {
-  TravelEntry.find({ user_id: req.user.user_id }).exec((err, travelEntries) => {
-    if (err) {
-      res.status(500).send(err); return
+  const access_token = req.header('authorization').split(' ')[1]
+  const { user_id } = req.user
+
+  FB.api('me', { fields: ['id', 'name', 'friends'], access_token }, (response) => {
+    if (!response || response.error) {
+      res.status(500).send(response.error); return
     }
-    res.json({ user: Object.assign({}, req.user.toObject(), { travelEntries }) })
+
+    const { friends } = response
+    TravelEntry.find({ user_id }).exec((err, travelEntries) => {
+      if (err) {
+        res.status(500).send(err); return
+      }
+      res.json({ user: Object.assign({}, req.user.toObject(), { travelEntries, friends }) })
+    })
   })
 }
 
