@@ -21,7 +21,7 @@ const MapPhotoWrapper = styled.div`
   transition: all 0.3s ease;
   transform: translate(-50%, -50%);
   &:hover {
-    transform: translate(-50%, -50%) scale(1.5);
+    transform: translate(-50%, -50%) scale(3.5);
     box-shadow: ${shadows.default};
   }
 `
