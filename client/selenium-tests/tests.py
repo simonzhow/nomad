@@ -104,3 +104,4 @@ nav_leaderboard = driver.find_element_by_xpath("//a[text()='My Friends']").click
 
 
 print "successful!"
+driver.quit()
