@@ -96,6 +96,7 @@ const CloseButtonWrapper = styled.div`
 const DeleteText = styled.div`
   text-decoration: underline;
   color: ${colors.red};
+  cursor: pointer;
 `
 
 function MapMarkerDetailedView(props) {
@@ -130,7 +131,7 @@ function MapMarkerDetailedView(props) {
       <ImageCarousel>
         {photo_url && <div><EntryImage alt={title} src={photo_url} /></div>}
       </ImageCarousel>
-      <DeleteText onClick={deleteTravelEntry} >Delete travel entry</DeleteText>
+      <DeleteText onClick={deleteTravelEntry} >Delete</DeleteText>
     </SelectedEntryView>
   )
 }
