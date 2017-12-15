@@ -15,37 +15,44 @@ import { calculatePoints } from '../util/travel-entry-helpers'
 export function getTravelEntries(req, res) {
   const access_token = req.header('authorization').split(' ')[1]
   const user_id = req.params.user_id
+  let isFriend = false
 
-  FB.api('me', { fields: ['id', 'name', 'friends'], access_token }, (response) => {
-    if (!response || response.error) {
-      res.status(500).send(response.error); return
-    }
+  if (req.user.user_id === user_id) {
+    TravelEntry.find({ user_id }).exec((err, travelEntries) => {
+      if (err) {
+        res.status(500).send(err)
+        return
+      }
+      res.json({ travelEntries })
+    })
+  } else {
+    FB.api('me', { fields: ['id', 'name', 'friends'], access_token }, (response) => {
+      if (!response || response.error) {
+        res.status(500).send(response.error); return
+      }
 
-    const { friends } = response
-    let isFriend = false
-    if (req.user.user_id === user_id) {
-      isFriend = true
-    } else {
+      const { friends } = response
       for (let i = 0; i < friends.data.length; i++) {
         if (friends.data[i].id === user_id) {
           isFriend = true
           break
         }
       }
-    }
-    if (isFriend) {
-      TravelEntry.find({ user_id }).exec((err, travelEntries) => {
-        if (err) {
-          res.status(500).send(err)
-          return
-        }
-        res.json({ travelEntries })
-      })
-    } else {
-      res.status(403)
-      return
-    }
-  })
+
+      if (isFriend) {
+        TravelEntry.find({ user_id }).exec((err, travelEntries) => {
+          if (err) {
+            res.status(500).send(err)
+            return
+          }
+          res.json({ travelEntries })
+        })
+      } else {
+        res.status(403)
+        return
+      }
+    })
+  }
 }
 
 /**
