@@ -1,5 +1,4 @@
 import TravelEntry from '../models/travelentry'
-import sanitizeHtml from 'sanitize-html'
 import FB from 'fb'
 
 /**
