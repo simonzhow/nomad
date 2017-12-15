@@ -25,7 +25,8 @@ const TopUsers = styled.div`
 `
 
 class Leaderboard extends React.Component {
-  componentDidMount() {
+  constructor(props) {
+    super(props)
     this.props.requestFriendsUpdate()
   }
 

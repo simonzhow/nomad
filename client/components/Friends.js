@@ -1,7 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 import UserCard from './UserCard'
 import SearchBar from './SearchBar'
+import actions from '../actions'
 
 const FriendsDiv = styled.div`
   padding: 30px;
@@ -28,64 +31,26 @@ const FriendsUserCards = styled.div`
   text-align: left;
 `
 
-// STATIC INPUT, MUST REPLACE
-const tempUser = {
-  users: [
-    {
-      name: {
-        first: 'Bibek',
-        last: 'Ghimire',
-      },
-      rank: 'World Traveler',
-      miles: 420,
-    },
-    {
-      name: {
-        first: 'Monil',
-        last: 'Patel',
-      },
-      rank: 'World Traveler',
-      miles: 420,
-    },
-    {
-      name: {
-        first: 'Simon',
-        last: 'Zhou',
-      },
-      rank: 'World Traveler',
-      miles: 420,
-    },
-    {
-      name: {
-        first: 'Anshul',
-        last: 'Aggarwal',
-      },
-      rank: 'World Traveler',
-      miles: 420,
-    },
-  ],
-}
-
-export class Friends extends Component {
-  constructor() {
-    super()
+export class Friends extends React.Component {
+  constructor(props) {
+    super(props)
     this.state = {
       searchQuery: '',
     }
+    this.props.requestFriendsUpdate()
   }
 
   render() {
     // this search works matching for any string within a name
     // TODO: need to figure out how to match from beginning ONLY
-    const usersInQuery = tempUser.users.filter((user) => {
-      const lowerFirst = user.name.first.toLowerCase()
-      const lowerLast = user.name.last.toLowerCase()
-
-      const lowerFull = lowerFirst.concat(' ').concat(lowerLast)
-      const lowerQuery = this.state.searchQuery.toLowerCase()
-
-      return lowerFull.includes(lowerQuery)
+    const filteredFriends = this.props.friends.filter((friend) => {
+      const { first_name, last_name } = friend
+      const fullName = `${first_name.toLowerCase()} ${last_name.toLowerCase()}`
+      return fullName.includes(this.state.searchQuery.toLowerCase())
     })
+
+    console.log('friends:', this.props.friends)
+    console.log('filtered friends:', filteredFriends)
 
     return (
       <FriendsDiv>
@@ -94,13 +59,15 @@ export class Friends extends Component {
         </FriendsTitleDiv>
 
         <FriendsSearchDiv>
-          <SearchBar handleChange={(text) => this.setState({ searchQuery: text })} />
+          <SearchBar
+            handleChange={(text) => this.setState({ searchQuery: text })}
+          />
         </FriendsSearchDiv>
 
         <FriendsUserCards>
           {
-            usersInQuery.map((user, i) => (
-              <UserCard key={i} userInfo={user} />
+            filteredFriends.map((user, i) => (
+              <UserCard key={i} user={user} />
             ))
           }
         </FriendsUserCards>
@@ -110,4 +77,13 @@ export class Friends extends Component {
 
 }
 
-export default Friends
+Friends.propTypes = {
+  friends: PropTypes.array,
+  requestFriendsUpdate: PropTypes.func,
+}
+
+const mapStateToProps = (state) => ({
+  friends: state.friends,
+})
+
+export default connect(mapStateToProps, actions)(Friends)
