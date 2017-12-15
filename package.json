@@ -81,7 +81,7 @@
     "yelp-fusion": "^1.0.4"
   },
   "devDependencies": {
-    "ava": "^0.15.2",
+    "ava": "^0.24.0",
     "babel-eslint": "^6.0.4",
     "babel-loader": "^6.2.4",
     "babel-plugin-webpack-loaders": "^0.7.0",
