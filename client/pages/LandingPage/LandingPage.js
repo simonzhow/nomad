@@ -22,7 +22,7 @@ const silhouette = [
 ]
 
 const ButtonBase = styled.div`
-  margin-top: 1em;
+  margin-top: 2em;
   padding: .8em 1.2em .8em 1.2em;
   border-radius: 1.5em;
   border-width: 4px;
@@ -35,12 +35,24 @@ const ButtonBase = styled.div`
 const SignUpButton = ButtonBase.extend`
   color: ${colors.green};
   background-color: ${colors.white};
-  border-color: ${colors.green};
+  border: none;
+
+  &:hover {
+    color: ${colors.white};
+    background-color: ${colors.green}
+  }
 `
 
 const LoginButton = ButtonBase.extend`
   color: ${colors.white};
   background-color: ${colors.green};
+  border: none;
+
+  &:hover {
+    color: ${colors.green};
+    background-color: ${colors.white};
+  }
+
 `
 
 const SplashContainer = styled.div`
