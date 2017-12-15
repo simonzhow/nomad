@@ -1,8 +1,12 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import axios from 'axios'
 import { colors } from '../constants/styles'
 import CloseIcon from './CloseIcon'
+import * as actions from '../actions'
+import { DELETE_TRAVEL_ENTRY } from '../constants/api-endpoints'
 
 const SelectedEntryView = styled.div`
   position: absolute;
@@ -78,6 +82,7 @@ const EntryImage = styled.img`
   border-radius: 5px;
 `
 
+
 const CloseButtonWrapper = styled.div`
   width: 30px;
   height: 30px;
@@ -88,11 +93,34 @@ const CloseButtonWrapper = styled.div`
   cursor: pointer;
 `
 
-export default function MapMarkerDetailedView(props) {
+const DeleteText = styled.div`
+  text-decoration: underline;
+  color: ${colors.red};
+`
+
+function MapMarkerDetailedView(props) {
   const { title, description, photo_url, points } = props.entry
-  // Right now, we only show one image in the ImageCarousel but it's technically
-  // built to support any number of images per entry and it'll render with
-  // horizontal scroll
+
+  const deleteTravelEntry = () => {
+    const { travel_id } = props.entry
+    axios({
+      method: 'delete',
+      url: [DELETE_TRAVEL_ENTRY, travel_id].join('/'),
+      headers: {
+        Authorization: `Bearer ${props.accessToken}`,
+      },
+    })
+      .then(() => {
+        // eslint-disable-next-line no-console
+        props.closeView()
+        props.getUserAsync()
+      })
+      .catch(err => {
+        // eslint-disable-next-line
+        console.log(err)
+      })
+  }
+
   return (
     <SelectedEntryView>
       <CloseButtonWrapper onClick={props.closeView}><CloseIcon /></CloseButtonWrapper>
@@ -102,6 +130,7 @@ export default function MapMarkerDetailedView(props) {
       <ImageCarousel>
         {photo_url && <div><EntryImage alt={title} src={photo_url} /></div>}
       </ImageCarousel>
+      <DeleteText onClick={deleteTravelEntry} >Delete travel entry</DeleteText>
     </SelectedEntryView>
   )
 }
@@ -109,4 +138,12 @@ export default function MapMarkerDetailedView(props) {
 MapMarkerDetailedView.propTypes = {
   entry: PropTypes.object.isRequired,
   closeView: PropTypes.func,
+  accessToken: PropTypes.string,
+  getUserAsync: PropTypes.func,
 }
+
+const mapStateToProps = (state) => ({
+  accessToken: state.auth.accessToken,
+})
+
+export default connect(mapStateToProps, actions)(MapMarkerDetailedView)
