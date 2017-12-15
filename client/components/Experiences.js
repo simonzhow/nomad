@@ -19,7 +19,6 @@ const Title = styled.h1`
 const Selector = styled.h1`
   font-size: 1.3em;
   color: ${colors.green};
-  cursor: pointer;
 `
 
 const ExperiencesContainer = styled.div`
@@ -45,10 +44,17 @@ const ExperienceCategory = styled.button`
   text-align: center;
   height: 30px;
   min-width: 40px;
-  margin: 0em .5em 0em .5em;
+  margin: .5em .5em 0em .5em;
   padding: 0.25em 1em;
   border-radius: 15px;
   border: solid 1px ${colors.green};
+  outline: none;
+  cursor: pointer;
+
+  &:hover {
+    color: ${colors.green};
+    background: ${colors.white};
+  }
 `
 
 const ExperienceCategoryContainer = styled.div`
@@ -91,8 +97,8 @@ const ExperienceDiv = styled.div`
   box-shadow: ${shadows.cardshadow};
   transition: all 200ms ease-in;
   position: relative;
-  cursor: pointer;
   animation: ${animateIn} .8s ease-in;
+  cursor: default;
   &:hover {
     transform: scale(1.05);
   }
