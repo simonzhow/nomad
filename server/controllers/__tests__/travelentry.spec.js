@@ -20,7 +20,7 @@ const travelEntry = new TravelEntry({
   @class
   @classdesc Tests for travel entry class
 */
-test.beforeEach('connect and add a travel entry', t => {
+test.before('connect and add a travel entry', t => {
   connectDB(t, () => {
     TravelEntry.create(travelEntry, err => {
       if (err) t.fail('Unable to create travel entry')
