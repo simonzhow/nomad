@@ -19,6 +19,6 @@ const travelEntrySchema = new Schema({
   location: Schema.Types.Mixed,
   photo_url: { type: String },
   points: { type: Number, required: true },
-})
+}, { timestamps: true })
 
 export default mongoose.model('TravelEntry', travelEntrySchema)
