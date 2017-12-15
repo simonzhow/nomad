@@ -29,7 +29,7 @@ export function calculatePoints(user, location, photoPresent) {
     const distances = Object.keys(DISTANCE_TO_POINTS).map(Number)
     for (let x = 0; x < distances.length; x++) {
       if (distances[x] < d) {
-        return distances[x]
+        return DISTANCE_TO_POINTS[distances[x]]
       }
     }
     return 0

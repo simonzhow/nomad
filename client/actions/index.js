@@ -2,9 +2,11 @@ import axios from 'axios'
 import {
   UPDATE_AUTH_ACTION,
   UPDATE_USER_ACTION,
+  UPDATE_FRIENDS_ACTION,
 } from './types'
 import {
   GET_USER,
+  GET_FRIENDS,
 } from '../constants/api-endpoints'
 
 export const updateAuth = (accessToken) => ({
@@ -19,6 +21,13 @@ export const updateUser = (user) => {
   }
 }
 
+export const updateFriends = (friends) => {
+  return {
+    type: UPDATE_FRIENDS_ACTION,
+    payload: friends,
+  }
+}
+
 export const getUserAsync = (onSuccess) => (
   (dispatch, getState) => {
     return axios({
@@ -30,6 +39,24 @@ export const getUserAsync = (onSuccess) => (
     }).then(response => {
       dispatch(updateUser(response.data.user))
       if (typeof onSuccess === 'function') { onSuccess(response.data.user) }
+    }).catch(err => {
+      // eslint-disable-next-line no-console
+      console.log(err)
+    })
+  }
+)
+
+export const requestFriendsUpdate = (onSuccess) => (
+  (dispatch, getState) => {
+    return axios({
+      method: 'get',
+      url: GET_FRIENDS,
+      headers: {
+        Authorization: `Bearer ${getState().auth.accessToken}`,
+      },
+    }).then(response => {
+      dispatch(updateFriends(response.data.friendsWithPoints))
+      if (typeof onSuccess === 'function') { onSuccess(response.data.friendsWithPoints) }
     }).catch(err => {
       // eslint-disable-next-line no-console
       console.log(err)

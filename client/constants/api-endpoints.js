@@ -1,5 +1,6 @@
 // User routes
 export const GET_USER = '/api/users'
+export const GET_FRIENDS = '/api/users/friends'
 export const COMPLETE_ONBOARDING = '/api/users/onboard'
 
 // Travel Entry routes
