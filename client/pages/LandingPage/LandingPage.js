@@ -22,7 +22,7 @@ const silhouette = [
 ]
 
 const ButtonBase = styled.div`
-  margin-top: 2em;
+  margin-top: 3em;
   padding: .8em 1.2em .8em 1.2em;
   border-radius: 1.5em;
   border-width: 4px;
@@ -30,17 +30,6 @@ const ButtonBase = styled.div`
   font-size: 18px;
   letter-spacing: 1px;
   cursor: pointer;
-`
-
-const SignUpButton = ButtonBase.extend`
-  color: ${colors.green};
-  background-color: ${colors.white};
-  border: none;
-
-  &:hover {
-    color: ${colors.white};
-    background-color: ${colors.green}
-  }
 `
 
 const LoginButton = ButtonBase.extend`
@@ -139,9 +128,6 @@ export class LandingPage extends React.Component {
       <div className={styles.container}>
         <div className={styles.landingCenterContent}>
           <img alt='logo' src={logo} />
-          <a href='/onboard'>
-            <SignUpButton>Join the community</SignUpButton>
-          </a>
           <LoginButton onClick={this.handleLoginClick}>Log In</LoginButton>
         </div>
         <SplashContainer>
