@@ -16,7 +16,6 @@ A web-app that encourages travel through an interactive travel history map and c
 5. Go to [localhost:8000](localhost:8000).
 
 ## Demo
-Made by Mihir:
 https://www.youtube.com/watch?v=Rhl0HH_OGVg&feature=youtu.be
 
 ## JSDocs
