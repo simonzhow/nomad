@@ -47,7 +47,7 @@
     "babel-preset-react-optimize": "^1.0.1",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.9.0",
-    "bcrypt": "^1.0.3",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.15.1",
     "chunk-manifest-webpack-plugin": "0.1.0",
     "cloudinary": "^1.9.1",
