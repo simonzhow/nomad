@@ -34,7 +34,7 @@
   "author": "Bibek Ghimire, Uma Lakshminarayan, Monil Patel, Simon Zhou, Mihir Mathur, Anshul Aggarwal",
   "license": "MIT",
   "dependencies": {
-    "async": "^2.6.0",
+    "async": "^2.6.4",
     "axios": "^0.17.1",
     "babel-core": "^6.9.1",
     "babel-eslint": "^6.0.4",
